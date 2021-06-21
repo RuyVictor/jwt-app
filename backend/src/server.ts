@@ -15,7 +15,7 @@ app.use(express.json());
 // Routes
 import userRoutes from './routes/UserRoutes';
 
-app.use('/api', userRoutes);
+app.use('/user', userRoutes);
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando em https://localhost:${PORT}`);

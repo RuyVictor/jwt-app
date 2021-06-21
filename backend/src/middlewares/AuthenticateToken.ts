@@ -8,13 +8,13 @@ declare module 'express-serve-static-core' {
 }
 
 export default function authenticateToken(req: Request, res: Response, next: NextFunction): any {
-    const token = req.headers['x-access-token'] as string;
+    const token = req.headers.authorization;
 
     if (token == null) return res.sendStatus(401);
 
     jwt.verify(token, process.env.TOKEN_SECRET as string, (err: any, decoded: any) => {
         if (err) {
-            return res.status(403).send({
+            return res.status(401).send({
                 auth: false,
                 message: 'Falha na autenticação com o token, token expirado!',
             });

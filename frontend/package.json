@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.6.0",
     "@react-native-community/blur": "^3.6.0",
     "@react-native-community/datetimepicker": "3.0.4",
     "@react-native-community/masked-view": "0.1.10",
@@ -17,35 +18,37 @@
     "@react-navigation/stack": "^5.14.3",
     "axios": "^0.21.1",
     "expo": "~40.0.0",
+    "expo-font": "~8.4.0",
     "expo-status-bar": "~1.0.3",
-    "install": "^0.13.0",
-    "npm": "^7.6.3",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-hook-form": "^7.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+    "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.2",
-    "react-native-ui-lib": "^5.21.0",
-    "react-native-web": "~0.13.12"
+    "react-native-toast-message": "^1.4.9",
+    "react-native-web": "~0.13.12",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
     "@types/react": "~16.9.35",
     "@types/react-dom": "~16.9.8",
     "@types/react-native": "~0.63.2",
-    "typescript": "~4.0.0",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
-    "prettier": "2.2.1"
+    "prettier": "2.2.1",
+    "typescript": "~4.0.0"
   },
   "private": true,
-  "name": "desafio-eagle-bank-digital-backend",
+  "name": "jwt-app",
   "version": "1.0.0",
   "author": "Ruy Victor <ruyvictor@hotmail.com.br>",
   "license": "MIT"

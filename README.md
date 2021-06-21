@@ -1,21 +1,32 @@
-# Desafio Eagle Bank Digital Backend
-### JWT
-![](https://img.shields.io/github/repo-size/RuyVictor/desafio-eagle-bank-digital-backend) ![](https://img.shields.io/github/contributors/RuyVictor/desafio-eagle-bank-digital-backend)
+<h1 align="center">
+    JWT App
+</h1>
+
+<p align="center">
+  <img src="./presentation.jpg">
+</p>
 
 ### Objetivo:
-> Este projeto consiste em ser um sistema simples de autenticação e autorização,
-> onde o usuário faz login ao sistema de backend, gerando um token válido ao mesmo 
-> com um tempo de expiração propositado. Apartir do momento em que este token é expirado, ao usuário abrir o app novamente, não será mais possível fazer o login automático, ou seja, o app irá redirecionar automáticamente para a página de login para que o usuário possa fazer uma nova autenticação com o servidor e assim tentar criar um novo token de acordo com os credenciais certos.
+> Este projeto consiste em um sistema simples de autenticação e autorização, onde o usuário faz o login no sistema de backend e recebe seus devidos dados. Apartir disso, o sistema irá gerar um token, o mesmo possui um tempo de expiração, quando expirado, o usuário não terá mais acesso ao login automático, então o app irá redirecionar automaticamente para a página de login para que o usuário possa fazer uma nova autenticação com o servidor e assim tentar criar um novo token de acordo com os credenciais certos.
 
 ### Backend:
 ```
-$ cd desafio-eagle-bank-digital-backend/backend
-$ yarn start
+$ cd jwt-app/backend
+$ yarn dev
 ```
 
 ### Frontend:
-- ##### Entre na pasta config e altere a variável BACKEND_HOST_IP de acordo com o IP da máquina local.
+- ##### Entre na pasta services e altere o ip de acordo com o ipv4 da sua máquina.
 ```
-$ cd desafio-eagle-bank-digital-backend/frontend
-$ yarn android
+$ cd jwt-app/frontend
+$ yarn start
 ```
+
+### Logando:
+- ##### Dados para login ao backend:
+```
+Email: test@gmail.com
+Senha: 123
+```
+
+>OBS: TODO BACKEND ESTÁ SENDO REFATORADO E MIGRADO PARA O NESTJS COM MAIS FUNCIONALIDADES COMO: RECUPERAR SENHA, CADASTRO E UPLOAD DE AVATAR!

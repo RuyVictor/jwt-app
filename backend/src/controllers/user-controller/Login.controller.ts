@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 const loginRoute = Router();
 
 interface UserPayload {
-    username: string;
+    email: string;
 }
 
 function generateAccessToken(userPayload: UserPayload): string {
@@ -14,17 +14,17 @@ function generateAccessToken(userPayload: UserPayload): string {
 }
 
 loginRoute.post('/', (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const userPayload: UserPayload = { username };
+    const userPayload: UserPayload = { email };
 
-    if (username === 'test' && password === '123') {
+    if (email === 'test@gmail.com' && password === '123') {
         const token = generateAccessToken(userPayload);
 
         return res.status(200).send({ auth: true, token });
     }
 
-    res.status(500).send('Login inválido!');
+    res.status(401).send('Login inválido!');
 });
 
 export default loginRoute;
