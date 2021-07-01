@@ -22,11 +22,14 @@ $ cd jwt-app/frontend
 $ yarn start
 ```
 
-### Logando:
-- ##### Dados para login ao backend:
+### Database:
+- ##### Crie uma database no postgresql com o nome jwt_app, em seguida conecte-se a ela e instale a extensão do uuid-ossp, com o comando CREATE EXTENSION 'uuid-ossp';
 ```
-Email: test@gmail.com
-Senha: 123
+host: localhost;
+port: 5432;
+username: postgres;
+password: postgres;
+database: jwt_ap;
 ```
 
 >OBS: TODO BACKEND ESTÁ SENDO REFATORADO E MIGRADO PARA O NESTJS COM MAIS FUNCIONALIDADES COMO: RECUPERAR SENHA, CADASTRO E UPLOAD DE AVATAR!

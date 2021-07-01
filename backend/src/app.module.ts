@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -8,13 +9,11 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ThrottlerModule.forRoot({ttl: 60, limit: 10}),
+    ConfigModule.forRoot({isGlobal: true}),
     TypeOrmModule.forRoot(),
-
+    
     UsersModule,
-
     AuthModule,
   ],
   controllers: [AppController],

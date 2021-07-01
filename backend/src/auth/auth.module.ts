@@ -5,13 +5,14 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
+import jwtConfig from '../config/jwt-config'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: `${process.env.TOKEN_SECRET}`,
-      signOptions: { expiresIn: '30s' }, //.env BUG, not load expiration time variable!
+      secret: jwtConfig.secret,
+      signOptions: { expiresIn: jwtConfig.expirationTime }
     }),
   ],
   controllers: [AuthController],
