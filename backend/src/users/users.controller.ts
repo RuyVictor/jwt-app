@@ -1,11 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import {
+  Controller,
+  UseGuards,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
 import { DeleteResult } from 'typeorm';
-import { NotFoundException } from "../errors/not-found.exception";
+import { NotFoundException } from '../errors/not-found.exception';
 
 @Controller('users')
 export class UsersController {
@@ -21,12 +33,18 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('test')
+  protectedRoute() {
+    return 'ACESSIVEL';
+  }
+
   @Get('findOne/:id')
   async findOne(@Param('id') id: string) {
     const user = await this.usersService.findOne(id);
 
     if (!user) {
-      throw new NotFoundException;
+      throw new NotFoundException();
     }
 
     return user;
@@ -37,7 +55,7 @@ export class UsersController {
     const user = await this.usersService.update(id, updateUserDto);
 
     if (!user) {
-      throw new NotFoundException;
+      throw new NotFoundException();
     }
 
     return user;
@@ -45,12 +63,12 @@ export class UsersController {
 
   @Delete('remove/:id')
   async remove(@Param('id') id: string, @Res() res: Response) {
-    const user = await this.usersService.remove(id) as DeleteResult;
+    const user = (await this.usersService.remove(id)) as DeleteResult;
 
     if (user.affected === 0) {
-      throw new NotFoundException;
+      throw new NotFoundException();
     }
 
-    return res.status(200).send({message: 'User deleted sucefully'});
+    return res.status(200).send({ message: 'User has been deleted.' });
   }
 }
