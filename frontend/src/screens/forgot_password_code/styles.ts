@@ -4,6 +4,9 @@ import { theme } from '../../global/styles/theme';
 const { primary, secondary } = theme.colors;
 const { main, bold } = theme.fonts;
 
+export const CELL_SIZE = 40;
+export const CELL_BORDER_RADIUS = 4;
+
 export const styles = StyleSheet.create({
     status_bar: {
         backgroundColor: primary
@@ -45,30 +48,25 @@ export const styles = StyleSheet.create({
         width: '92%',
         borderRadius: 100,
     },
-    textfield_title: {
-        marginVertical: 8,
-        fontSize: 17,
-        fontFamily: main,
-        color: secondary
+    codeFiledRoot: {
+        height: CELL_SIZE,
+        paddingHorizontal: 20,
+        justifyContent: 'center',
     },
-    textfield: {
-        width: '100%',
-        height: 45,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderRadius: 4,
-        borderColor: primary,
-        backgroundColor: secondary,
-        color: 'red',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    input_text: {
-        color: primary,
+    cell: {
+        marginHorizontal: 8,
+        height: CELL_SIZE,
+        width: CELL_SIZE,
+        lineHeight: CELL_SIZE - 3,
+        fontSize: 28,
+        textAlign: 'center',
+        borderRadius: CELL_BORDER_RADIUS,
+        color: primary, //TEXT COLOR
+        elevation: 4,
     },
     warning_icon: {
         color: '#ff8c00',
-        marginRight: 14
+        marginRight: 4
     },
     auth_warning: {
         fontSize: 14,
@@ -89,5 +87,19 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         marginVertical: 10,
         width: '60%'
-    }
+    },
+    link: {
+        textAlign: 'center',
+        fontSize: 18,
+        marginRight: 4,
+        fontFamily: main,
+        color: secondary,
+        opacity: 0.6
+    },
+    link_bold: {
+        fontSize: 18,
+        fontFamily: bold,
+        color: secondary,
+        opacity: 0.6
+    },
 });

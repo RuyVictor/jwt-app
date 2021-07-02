@@ -10,7 +10,8 @@ import SplashScreen from '../screens/splash_screen';
 import SignIn from '../screens/sign_in';
 import SignUp from '../screens/sign_up';
 import ForgotPassword from '../screens/forgot_password';
-import ForgotPasswordConfirmation from '../screens/forgot_password_confirmation';
+import ForgotPasswordCode from '../screens/forgot_password_code';
+import ForgotPasswordChangePassword from '../screens/forgot_password_change_password';
 import Home from '../screens/home';
 import Config from '../screens/config';
 
@@ -19,9 +20,24 @@ import AuthContext from '../contexts/AuthContext';
 
 const Stack = createStackNavigator();
 
+interface IUserRequest {
+    user: IUser
+    token: string;
+};
+
+interface IUser {
+    user_name?: string;
+    full_name?: string;
+    email?: string;
+    password?: string;
+    avatar?: string;
+    verified?: string;
+}
+
+
 const Routes: React.FC = () => {
 
-	async function saveUserData(data: any) {
+	async function saveUserData(data: IUserRequest) {
         try {
             await SecureStore.setItemAsync('user_data', JSON.stringify(data));
         } catch (e) {
@@ -31,7 +47,7 @@ const Routes: React.FC = () => {
 
     const [loading, setLoading] = useState(true);
 
-    const [currentUserData, setCurrentUserData] = useState({});
+    const [currentUserData, setCurrentUserData] = useState<IUser>({});
 
     useEffect(() => {
         //Função de validação do usuário, irá para a tela Home
@@ -40,7 +56,7 @@ const Routes: React.FC = () => {
 
             try {
 
-                let userData = JSON.parse(
+                let userData: IUserRequest = JSON.parse(
                     await SecureStore.getItemAsync("user_data") as string
                 );
 
@@ -51,10 +67,10 @@ const Routes: React.FC = () => {
 
                 api.defaults.headers.common["Authorization"] = userData.token as string;
 
-                response = await api.get('/user/validate');
+                response = await api.get('/auth/validate');
 
                 if (response.status === 200) {
-                    setCurrentUserData(userData)
+                    setCurrentUserData(userData as IUser)
                     setLoading(false)
                 }
 
@@ -78,16 +94,16 @@ const Routes: React.FC = () => {
 
     const authContext = useMemo(
         () => ({
-            signIn: async (data: any): Promise<number | undefined> => {
+            signIn: async (email: string, password: string): Promise<number | undefined> => {
 
                 let response;
                 try {
-                    response = await api.post('/user/sign-in', {
-                        email: data.email,
-                        password: data.password,
+                    response = await api.post('/auth/signin', {
+                        email,
+                        password
                     });
 
-                    if (response.status === 200) {
+                    if (response.status === 201) {
                         saveUserData(response.data); // Salva o usuário no secure storage
                         setCurrentUserData(response.data)
                     }
@@ -101,12 +117,11 @@ const Routes: React.FC = () => {
                 }
             },
 
-            signUp: async (data: any): Promise<number | undefined> => {
-
+            signUp: async (data: IUser): Promise<number | undefined> => {
                 let response;
                 try {
-                    response = await api.post('/user/sign-up', {
-                        name: data.name,
+                    response = await api.post('/auth/signup', {
+                        user_name: data.user_name,
                         email: data.email,
                         password: data.password,
                     });
@@ -129,15 +144,15 @@ const Routes: React.FC = () => {
                 setCurrentUserData({})
             },
 
-            confirmEmail: async () => {
+            confirmEmail: async (email: string, code: string) => {
                 let response;
                 try {
-                    response = await api.post('/user/confirm-email', {
-                        email: currentUserData.email,
-                        code: data.code
+                    response = await api.post('/mail/confirm-email', {
+                        email,
+                        code
                     });
 
-                    if (response.status === 200) {
+                    if (response.status === 201) {
                         return response.status;
                     }
                 } catch (e) {
@@ -150,14 +165,14 @@ const Routes: React.FC = () => {
                 }
             },
 
-            recoverPassword: async () => {
+            forgotPassword: async (email: string) => {
                 let response;
                 try {
-                    response = await api.post('/user/recover-password', {
-                        email: data.email
+                    response = await api.post('/mail/forgot-password', {
+                        email
                     });
 
-                    if (response.status === 200) {
+                    if (response.status === 201) {
                         return response.status;
                     }
                 } catch (e) {
@@ -170,15 +185,39 @@ const Routes: React.FC = () => {
                 }
             },
 
-            confirmRecoverPassword: async () => {
+            forgotPasswordCode: async (email: string, code: string) => {
+
+                console.log(email + " " + code)
                 let response;
                 try {
-                    response = await api.post('/user/confirm-recover-password', {
-                        email: currentUserData.email,
-                        code: data.code
+                    response = await api.post('/mail/forgot-password-code', {
+                        email,
+                        code
                     });
 
-                    if (response.status === 200) {
+                    if (response.status === 201) {
+                        return response.status;
+                    }
+                } catch (e) {
+                    console.log(e);
+                    if (e.response) {
+                        return e.response.status;
+                    } else {
+                        return 503;
+                    }
+                }
+            },
+
+            forgotPasswordChangePassword: async (email: string, code: string, password: string) => {
+                let response;
+                try {
+                    response = await api.post('/mail/forgot-password-change-password', {
+                        email,
+                        password,
+                        code
+                    });
+
+                    if (response.status === 201) {
                         return response.status;
                     }
                 } catch (e) {
@@ -214,7 +253,8 @@ const Routes: React.FC = () => {
                             <Stack.Screen name="SignIn" component={SignIn} />
                             <Stack.Screen name="SignUp" component={SignUp} />
                             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-                            <Stack.Screen name="ForgotPasswordConfirmation" component={ForgotPasswordConfirmation} />
+                            <Stack.Screen name="ForgotPasswordCode" component={ForgotPasswordCode} />
+                            <Stack.Screen name="ForgotPasswordChangePassword" component={ForgotPasswordChangePassword} />
                         </>
                     ) : (
                         <>

@@ -69,7 +69,7 @@ export default function SignUp({navigation}) {
         setAuthError('');
         console.log(data)
         const status = await signUp({
-            name: data.userName,
+            user_name: data.userName,
             email: data.userEmail,
             password: data.userPwd
         })

@@ -29,7 +29,7 @@ host: localhost;
 port: 5432;
 username: postgres;
 password: postgres;
-database: jwt_ap;
+database: jwt_app;
 ```
 
 >OBS: TODO BACKEND ESTÁ SENDO REFATORADO E MIGRADO PARA O NESTJS COM MAIS FUNCIONALIDADES COMO: RECUPERAR SENHA, CADASTRO E UPLOAD DE AVATAR!

@@ -5,8 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  OneToOne,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+
+import { UserActions } from 'src/mail/user-actions.entity';
 
 @Entity('users')
 export class User {
@@ -16,20 +19,26 @@ export class User {
   @Column()
   user_name: string;
 
-  @Column()
-  full_name: string;
-
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column({ select: false })
   password: string;
+
+  @Column({ nullable: true })
+  avatar: string;
+
+  @Column({ default: false })
+  verified: boolean;
 
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToOne(() => UserActions, (UserActions) => UserActions.user)
+  user_actions: UserActions;
 
   @BeforeInsert()
   async hashPassword() {

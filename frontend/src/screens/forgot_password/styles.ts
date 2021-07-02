@@ -78,6 +78,7 @@ export const styles = StyleSheet.create({
     },
     warning_icon: {
         color: '#ff8c00',
+        marginRight: 4
     },
     auth_warning: {
         fontSize: 14,

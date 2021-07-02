@@ -24,7 +24,7 @@ const schema = yup.object().shape({
 
 export default function ForgotPassword({navigation}) {
 
-    const { recoverPassword } = React.useContext(AuthContext);
+    const { forgotPassword } = React.useContext(AuthContext);
 
     const {
         handleSubmit,
@@ -41,10 +41,12 @@ export default function ForgotPassword({navigation}) {
     const handleRecoverPassword = async (data: IFormInputs) => {
         setAuthError('');
         console.log(data)
-        const status = await signIn({email: data.userEmail})
-        if (status === 200) {
-            navigation.navigate('ForgotPasswordConfirmation', {email: data.userEmail})
-        } else if (status === 404 || status === 503) {
+        const status = await forgotPassword(data.userEmail)
+        if (status === 201) {
+            navigation.navigate('ForgotPasswordCode', {email: data.userEmail})
+        } else if (status === 404) {
+            setAuthError('Usuário não encontrado!');
+        } else if (status === 503) {
             setAuthError('Não foi possível se conectar ao servidor!');
         } else if (status === 500) {
             setAuthError('Ocorreu um erro interno!');
@@ -123,7 +125,12 @@ export default function ForgotPassword({navigation}) {
 
                 {authError !== "" &&
 
-                    <View style={{...styles.horizontal_container, marginTop: 10}}>
+                    <View style={
+                        {...styles.horizontal_container,
+                            marginTop: 10,
+                            justifyContent: 'center'
+                        }
+                        }>
                         <Icon
                             iconStyle={styles.warning_icon}
                             type='font-awesome'

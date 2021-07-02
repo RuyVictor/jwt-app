@@ -2,9 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult, DeleteResult } from 'typeorm';
 import { User } from './user.entity';
+import { UserActions } from 'src/mail/user-actions.entity';
+
+import { MailService } from 'src/mail/mail.service';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+
 import { ConflictException } from '../errors/conflict.exception';
 import { NotFoundException } from 'src/errors/not-found.exception';
 
@@ -13,9 +17,12 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(UserActions)
+    private userActionsRepository: Repository<UserActions>,
+    private readonly mailService: MailService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<void> {
     const foundUser = await this.usersRepository.findOne({
       where: [
         { email: createUserDto.email },
@@ -37,7 +44,13 @@ export class UsersService {
     }
 
     const obj = this.usersRepository.create(createUserDto); // activate BeforeInsert for password hashing
-    return this.usersRepository.save(obj);
+    const savedUser = await this.usersRepository.save(obj); // Save user
+
+    // Create a repository for user account actions only Ex: Recover tokens, Login time.
+    let userActions = this.userActionsRepository.create({ user: savedUser });
+    await this.userActionsRepository.save(userActions);
+
+    await this.mailService.sendConfirmEmail(createUserDto);
   }
 
   async findAll(): Promise<User[]> {
@@ -46,7 +59,7 @@ export class UsersService {
 
   async findOne(id: string): Promise<User> {
     const user = await this.usersRepository.findOne(id);
-    
+
     if (!user) {
       throw new NotFoundException();
     }
@@ -54,7 +67,10 @@ export class UsersService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UpdateResult> {
     const user = await this.usersRepository.update(id, updateUserDto);
 
     if (user.affected === 0) {
@@ -65,13 +81,12 @@ export class UsersService {
   }
 
   async delete(id: string): Promise<DeleteResult> {
-
-    const user =  await this.usersRepository.delete(id);
+    const user = await this.usersRepository.delete(id);
 
     if (user.affected === 0) {
       throw new NotFoundException();
     }
-    
+
     return user;
   }
 }

@@ -17,15 +17,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(user: LoginUserDto): Promise<any> {
-    const foundUser = await this.usersRepository.findOne(user.email);
-    if (foundUser && foundUser.password === user.password) {
-      const { password, ...result } = foundUser;
-      return result;
-    }
-    return null;
-  }
-
   async login(user: LoginUserDto) {
     const foundUser = await this.usersRepository
       .createQueryBuilder('user')

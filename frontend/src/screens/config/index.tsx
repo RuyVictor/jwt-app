@@ -82,7 +82,7 @@ export default function Config({ navigation }) {
 
                 <View>
                     <Text style={styles.logout_label}>
-                        Deslogar do aplicativo
+                        Sair do aplicativo
                     </Text>
 
                     <Divider
@@ -94,7 +94,7 @@ export default function Config({ navigation }) {
                     <Button
                         buttonStyle={styles.logout_button}
                         containerStyle={styles.logout_button_container}
-                        title="DESLOGAR  "
+                        title="SAIR  "
                         icon={
                             <Icon
                             iconStyle={styles.logout_button_icon}
@@ -114,11 +114,11 @@ export default function Config({ navigation }) {
                 overlayStyle={styles.modal_container}>
 
                     <Text style={styles.modal_title}>
-                        Sair do aplicativo
+                        Sair da conta
                     </Text>
 
                     <Text style={styles.modal_label}>
-                        Tem certeza que deseja deslogar do aplicativo?
+                        Tem certeza que deseja sair da conta?
                     </Text>
                     
                     <View style={{...styles.horizontal_container, marginTop: 10}}>

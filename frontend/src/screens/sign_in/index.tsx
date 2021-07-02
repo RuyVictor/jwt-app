@@ -53,7 +53,7 @@ export default function SignIn({navigation}) {
     const handleSignIn = async (data: IFormInputs) => {
         setAuthError('');
         console.log(data)
-        const status = await signIn({email: data.userEmail, password: data.userPwd})
+        const status = await signIn(data.userEmail, data.userPwd)
         if (status === 404 || status === 503) {
             setAuthError('Não foi possível se conectar ao servidor!');
         } else if (status === 401) {
