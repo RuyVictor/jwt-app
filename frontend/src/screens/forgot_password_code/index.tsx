@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { styles, CELL_SIZE, CELL_BORDER_RADIUS } from "./styles";
 import { View, TouchableOpacity, Animated } from 'react-native';
-import { Header, Icon, Button, Text, Divider } from 'react-native-elements';
+import { Icon, Text, Divider } from 'react-native-elements';
+import MainHeader from '../../components/main_header';
 import Toast from 'react-native-toast-message';
 
 import { theme } from '../../global/styles/theme';
@@ -13,6 +13,7 @@ import {
     Cursor,
     useBlurOnFulfill,
     useClearByFocusCell,
+    RenderCellOptions
 } from 'react-native-confirmation-code-field';
 
 // Contexts
@@ -52,7 +53,7 @@ export default function ForgotPasswordCode({route, navigation}) {
         setAuthError('');
         const status = await forgotPassword(email)
         if (status === 201) {
-            Toast.show({ text1: 'O código foi enviado ao seu email!' })
+            Toast.show({ text1: 'O código foi enviado ao seu email!', type: 'success' })
         } else if (status === 404) {
             setAuthError('Usuário não encontrado!');
         } else if (status === 503) {
@@ -77,7 +78,8 @@ export default function ForgotPasswordCode({route, navigation}) {
 
     const animationsColor = [...new Array(CELL_COUNT)].map(() => new Animated.Value(0));
     const animationsScale = [...new Array(CELL_COUNT)].map(() => new Animated.Value(1));
-    const animateCell = ({hasValue, index, isFocused}) => {
+    const animateCell = ({symbol, index, isFocused}: RenderCellOptions) => {
+        const hasValue = Boolean(symbol);
         Animated.parallel([
             Animated.timing(animationsColor[index], {
                 useNativeDriver: false,
@@ -98,7 +100,7 @@ export default function ForgotPasswordCode({route, navigation}) {
         setValue: setCodeValue,
     });
 
-    const renderCell = ({index, symbol, isFocused}): any => {
+    const renderCell = ({index, symbol, isFocused}: RenderCellOptions) => {
         const hasValue = Boolean(symbol);
         const animatedCellStyle = {
             backgroundColor: hasValue
@@ -125,7 +127,7 @@ export default function ForgotPasswordCode({route, navigation}) {
         };
 
         setTimeout(() => {
-            animateCell({hasValue, index, isFocused});
+            animateCell({symbol, index, isFocused});
         }, 0);
       
         return (
@@ -141,28 +143,12 @@ export default function ForgotPasswordCode({route, navigation}) {
     return (
         <View style={styles.container}>
 
-            <Header
-                containerStyle={styles.header_container}
-                leftComponent={
-                    <Icon
-                    iconStyle={styles.header_icon}
-                    underlayColor='white'
-                    type='ionicon'
-                    name='arrow-back'
-                    size={30}
-                    onPress={() => navigation.goBack()}
-                    />
-                }
-                centerComponent={
-                    <Text style={styles.header_title}>
-                        Recuperar senha
-                    </Text>
-                }
+            <MainHeader
+                iconLeft={{type: 'ionicon', name: 'arrow-back', onPress: () => navigation.goBack()}}
+                headerTitle="Recuperar senha"
             />
 
             <View style={styles.recover_container}>
-
-                <StatusBar backgroundColor={styles.status_bar.backgroundColor} />
 
                 <CodeField
                     ref={ref}

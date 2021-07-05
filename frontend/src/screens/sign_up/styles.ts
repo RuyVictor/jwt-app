@@ -5,27 +5,10 @@ const { primary, secondary } = theme.colors;
 const { main } = theme.fonts;
 
 export const styles = StyleSheet.create({
-    status_bar: {
-        backgroundColor: primary
-    },
     container: {
         flex: 1,
         backgroundColor: primary,
         alignItems: 'center',
-    },
-    header_container: {
-        backgroundColor: secondary,
-        height: 90,
-        paddingHorizontal: 14,
-        zIndex: 1
-    },
-    header_icon: {
-        color: primary,
-    },
-    header_title: {
-        color: primary,
-        fontSize: 24,
-        fontFamily: main
     },
     signup_container: {
         width: 280,
@@ -45,24 +28,6 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         width: '92%',
         borderRadius: 100,
-    },
-    textfield_title: {
-        marginVertical: 8,
-        fontSize: 17,
-        fontFamily: main,
-        color: secondary
-    },
-    textfield: {
-        width: '100%',
-        height: 45,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderRadius: 4,
-        borderColor: primary,
-        backgroundColor: secondary,
-    },
-    input_text: {
-        color: primary,
     },
     title: {
         fontSize: 40,
@@ -85,9 +50,6 @@ export const styles = StyleSheet.create({
         fontFamily: main,
         color: secondary,
         opacity: 0.6
-    },
-    left_icon_container: {
-        width: 25,
     },
     icon: {
         color: primary,

@@ -1,11 +1,15 @@
 import React from 'react'
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToastProps } from 'react-native-toast-message';
 import { styles } from "./styles";
 import { View } from 'react-native';
-import { Card, Icon, Button, Text, Input, Divider } from 'react-native-elements'
+import { Card, Icon, Text } from 'react-native-elements'
+
+interface CustomToastProps extends BaseToastProps {
+	props: any;
+}
 
 export const toastConfig = {
-  success: ({ text1, props, ...rest }) => (
+  success: ({ text1, props, ...rest }: CustomToastProps) => (
   	<Card
   	containerStyle={styles.container}
   	wrapperStyle={styles.horizontal_container}>

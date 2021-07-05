@@ -31,24 +31,6 @@ export const styles = StyleSheet.create({
         width: '92%',
         borderRadius: 100,
     },
-    textfield_title: {
-        marginVertical: 8,
-        fontSize: 17,
-        fontFamily: main,
-        color: secondary
-    },
-    textfield: {
-        width: '100%',
-        height: 45,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderRadius: 4,
-        borderColor: primary,
-        backgroundColor: secondary,
-    },
-    input_text: {
-        color: primary,
-    },
     title: {
         fontSize: 40,
         fontFamily: main
@@ -76,9 +58,6 @@ export const styles = StyleSheet.create({
         fontFamily: bold,
         color: secondary,
         opacity: 0.6
-    },
-    left_icon_container: {
-        width: 25,
     },
     icon: {
         color: primary,

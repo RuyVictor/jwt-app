@@ -13,8 +13,8 @@ export default function App() {
 
 		async function loadFonts() {
 		    await Font.loadAsync({
-		      PTSansNarrowRegular: require('./src/assets/fonts/PTSansNarrow-Regular.ttf'),
-		      PTSansNarrowBold: require('./src/assets/fonts/PTSansNarrow-Bold.ttf')
+		      'PTSansNarrowRegular': require('./src/assets/fonts/PTSansNarrow-Regular.ttf'),
+		      'PTSansNarrowBold': require('./src/assets/fonts/PTSansNarrow-Bold.ttf')
 		    });
 		   	setFontsLoaded(true);
 		}

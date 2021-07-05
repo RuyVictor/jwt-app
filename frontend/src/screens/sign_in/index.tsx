@@ -1,8 +1,11 @@
 import React from 'react';
+
+// COMPONENTS
 import { StatusBar } from 'expo-status-bar';
 import { styles } from "./styles";
 import { View, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
-import { Icon, Button, Text, Input, Divider } from 'react-native-elements'
+import { Icon, Button, Text, Divider } from 'react-native-elements'
+import MainInput from '../../components/main_input';
 
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -81,15 +84,11 @@ export default function SignIn({navigation}) {
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                    <Input
+                    <MainInput
                         {...field}
                         label="Email"
-                        labelStyle={styles.textfield_title}
-                        inputContainerStyle={{...styles.textfield,
-                            borderColor: errors?.userEmail && 'red'
-                        }}
-                        inputStyle={styles.input_text}
-                        leftIconContainerStyle={styles.left_icon_container}
+                        hasError={errors?.userEmail}
+                        errorMessage={errors.userEmail?.message}
                         leftIcon={
                             <Icon
                                 iconStyle={styles.icon}
@@ -100,8 +99,6 @@ export default function SignIn({navigation}) {
                         keyboardType="email-address"
                         placeholder="Digite seu email"
                         onChangeText={field.onChange}
-                        renderErrorMessage={false}
-                        errorMessage={errors.userEmail?.message}
                     />
                 )}/>
 
@@ -110,15 +107,11 @@ export default function SignIn({navigation}) {
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                    <Input
+                    <MainInput
                         {...field}
                         label="Senha"
-                        labelStyle={styles.textfield_title}
-                        inputContainerStyle={{...styles.textfield,
-                            borderColor: errors?.userPwd && 'red'
-                        }}
-                        inputStyle={styles.input_text}
-                        leftIconContainerStyle={styles.left_icon_container}
+                        hasError={errors?.userPwd}
+                        errorMessage={errors.userPwd?.message}
                         secureTextEntry={!showPassword}
                         leftIcon={
                             <Icon
@@ -128,7 +121,6 @@ export default function SignIn({navigation}) {
                                 size={18}
                             />
                         }
-
                         rightIcon={
                             <Icon
                             iconStyle={styles.icon}
@@ -139,8 +131,6 @@ export default function SignIn({navigation}) {
                         }
                         placeholder="Digite sua senha"
                         onChangeText={field.onChange}
-                        renderErrorMessage={false}
-                        errorMessage={errors.userPwd?.message}
                     />
                 )}/>
 

@@ -1,8 +1,9 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { styles } from "./styles";
 import { View, ScrollView } from 'react-native';
-import { Header, Icon, Button, Text, Input, Divider } from 'react-native-elements'
+import { Icon, Button, Text, Divider } from 'react-native-elements';
+import MainHeader from '../../components/main_header';
+import MainInput from '../../components/main_input';
 import Toast from 'react-native-toast-message';
 
 import { useForm, Controller } from "react-hook-form";
@@ -30,7 +31,9 @@ const schema = yup.object().shape({
     .email("Por favor adicione um email válido!")
     .required("Por favor adicione um email válido!"),
 
-    userPwd: yup.string().required("Por favor adicione sua senha!"),
+    userPwd: yup.string()
+    .min(6, 'No mínimo 6 caracteres!')
+    .required("Por favor adicione sua senha!"),
 
     userPwdConfirmation: yup
     .string()
@@ -74,7 +77,7 @@ export default function SignUp({navigation}) {
             password: data.userPwd
         })
         if (status === 201) {
-            Toast.show({ text1: 'Cadastrado com sucesso!' })
+            Toast.show({ text1: 'Cadastrado com sucesso!', type: 'success'})
             navigation.navigate('SignIn')
         } else if (status === 404 || status === 503) {
           setAuthError("Não foi possível se conectar ao servidor!");
@@ -86,42 +89,23 @@ export default function SignUp({navigation}) {
     return (
         <View style={styles.container}>
 
-            <Header
-                containerStyle={styles.header_container}
-                leftComponent={
-                    <Icon
-                    iconStyle={styles.header_icon}
-                    underlayColor='white'
-                    type='ionicon'
-                    name='arrow-back'
-                    size={30}
-                    onPress={() => navigation.goBack()}
-                    />
-                }
-                centerComponent={
-                    <Text style={styles.header_title}>
-                        Cadastrar
-                    </Text>
-                }
+            <MainHeader
+                iconLeft={{type: 'ionicon', name: 'arrow-back', onPress: () => navigation.goBack()}}
+                headerTitle="Cadastrar"
             />
 
             <ScrollView contentContainerStyle={styles.signup_container}>
 
-            <StatusBar backgroundColor={styles.status_bar.backgroundColor} />
                 <Controller
                 name="userName"
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                    <Input
+                    <MainInput
                         {...field}
                         label="Nome"
-                        labelStyle={styles.textfield_title}
-                        inputContainerStyle={{...styles.textfield,
-                            borderColor: errors?.userName && 'red'
-                        }}
-                        inputStyle={styles.input_text}
-                        leftIconContainerStyle={styles.left_icon_container}
+                        hasError={errors?.userName}
+                        errorMessage={errors.userName?.message}
                         leftIcon={
                             <Icon
                                 iconStyle={styles.icon}
@@ -132,8 +116,6 @@ export default function SignUp({navigation}) {
                         }
                         placeholder="Digite seu nome"
                         onChangeText={field.onChange}
-                        renderErrorMessage={false}
-                        errorMessage={errors.userName?.message}
                     />
                 )}/>
 
@@ -142,15 +124,11 @@ export default function SignUp({navigation}) {
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                    <Input
+                    <MainInput
                         {...field}
                         label="Email"
-                        labelStyle={styles.textfield_title}
-                        inputContainerStyle={{...styles.textfield,
-                            borderColor: errors?.userEmail && 'red'
-                        }}
-                        inputStyle={styles.input_text}
-                        leftIconContainerStyle={styles.left_icon_container}
+                        hasError={errors?.userEmail}
+                        errorMessage={errors.userEmail?.message}
                         leftIcon={
                             <Icon
                                 iconStyle={styles.icon}
@@ -161,8 +139,6 @@ export default function SignUp({navigation}) {
                         keyboardType="email-address"
                         placeholder="Digite seu email"
                         onChangeText={field.onChange}
-                        renderErrorMessage={false}
-                        errorMessage={errors.userEmail?.message}
                     />
                 )}/>
 
@@ -171,15 +147,11 @@ export default function SignUp({navigation}) {
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                    <Input
+                    <MainInput
                         {...field}
                         label="Senha"
-                        labelStyle={styles.textfield_title}
-                        inputContainerStyle={{...styles.textfield,
-                            borderColor: errors?.userPwd && 'red'
-                        }}
-                        inputStyle={styles.input_text}
-                        leftIconContainerStyle={styles.left_icon_container}
+                        hasError={errors?.userPwd}
+                        errorMessage={errors.userPwd?.message}
                         secureTextEntry={!showPassword}
                         leftIcon={
                             <Icon
@@ -200,8 +172,6 @@ export default function SignUp({navigation}) {
                         }
                         placeholder="Digite sua senha"
                         onChangeText={field.onChange}
-                        renderErrorMessage={false}
-                        errorMessage={errors.userPwd?.message}
                     />
                 )}/>
 
@@ -210,15 +180,11 @@ export default function SignUp({navigation}) {
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                    <Input
+                    <MainInput
                         {...field}
                         label="Confirmar senha"
-                        labelStyle={styles.textfield_title}
-                        inputContainerStyle={{...styles.textfield,
-                            borderColor: errors?.userPwdConfirmation && 'red'
-                        }}
-                        inputStyle={styles.input_text}
-                        leftIconContainerStyle={styles.left_icon_container}
+                        hasError={errors?.userPwdConfirmation}
+                        errorMessage={errors.userPwdConfirmation?.message}
                         secureTextEntry={true}
                         leftIcon={
                             <Icon
@@ -230,8 +196,6 @@ export default function SignUp({navigation}) {
                         }
                         placeholder="Digite a mesma senha"
                         onChangeText={field.onChange}
-                        renderErrorMessage={false}
-                        errorMessage={errors.userPwdConfirmation?.message}
                     />
                 )}/>
 

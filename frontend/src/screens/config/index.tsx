@@ -1,8 +1,8 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { styles } from "./styles";
 import { View } from 'react-native';
-import { Icon, Header, Overlay, Button, Text, Input, Divider } from 'react-native-elements'
+import { Icon, Overlay, Button, Text, Divider } from 'react-native-elements';
+import MainHeader from '../../components/main_header';
 
 // Contexts
 import AuthContext from '../../contexts/AuthContext';
@@ -24,26 +24,12 @@ export default function Config({ navigation }) {
 
     return (
         <>
-            <Header
-                containerStyle={styles.header_container}
-                leftComponent={
-                    <Icon
-                    iconStyle={styles.header_icon}
-                    underlayColor='white'
-                    type='ionicon'
-                    name='arrow-back'
-                    size={30}
-                    onPress={() => navigation.goBack()}
-                    />
-                }
-                centerComponent={
-                    <Text style={styles.header_title}>
-                        Configurações
-                    </Text>
-                }
+            <MainHeader
+                iconLeft={{type: 'ionicon', name: 'arrow-back', onPress: () => navigation.goBack()}}
+                headerTitle="Configurações"
             />
+
             <View style={styles.container}>
-                <StatusBar backgroundColor={styles.status_bar.backgroundColor} />
 
                 <View style={{width: '90%'}}>
 

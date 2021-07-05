@@ -2,30 +2,13 @@ import { StyleSheet } from 'react-native';
 import { theme } from '../../global/styles/theme';
 
 const { primary, secondary } = theme.colors;
-const { main, bold } = theme.fonts;
+const { main } = theme.fonts;
 
 export const styles = StyleSheet.create({
-    status_bar: {
-        backgroundColor: primary
-    },
     container: {
         flex: 1,
         backgroundColor: primary,
         alignItems: 'center'
-    },
-    header_container: {
-        backgroundColor: secondary,
-        height: 90,
-        paddingHorizontal: 14,
-        zIndex: 1
-    },
-    header_icon: {
-        color: primary,
-    },
-    header_title: {
-        color: primary,
-        fontSize: 24,
-        fontFamily: main
     },
     recover_container: {
         flex: 1,

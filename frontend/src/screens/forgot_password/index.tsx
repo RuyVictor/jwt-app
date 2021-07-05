@@ -1,8 +1,10 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { styles } from "./styles";
 import { View } from 'react-native';
-import { Header, Card, Icon, Button, Text, Input, Divider } from 'react-native-elements'
+import { Card, Icon, Button, Text, Divider } from 'react-native-elements';
+import MainHeader from '../../components/main_header';
+import MainInput from '../../components/main_input';
+import Toast from 'react-native-toast-message';
 
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -43,6 +45,7 @@ export default function ForgotPassword({navigation}) {
         console.log(data)
         const status = await forgotPassword(data.userEmail)
         if (status === 201) {
+            Toast.show({ text1: 'O código foi enviado ao seu email!', type: 'success' })
             navigation.navigate('ForgotPasswordCode', {email: data.userEmail})
         } else if (status === 404) {
             setAuthError('Usuário não encontrado!');
@@ -56,28 +59,12 @@ export default function ForgotPassword({navigation}) {
     return (
         <View style={styles.container}>
 
-            <Header
-                containerStyle={styles.header_container}
-                leftComponent={
-                    <Icon
-                    iconStyle={styles.header_icon}
-                    underlayColor='white'
-                    type='ionicon'
-                    name='arrow-back'
-                    size={30}
-                    onPress={() => navigation.goBack()}
-                    />
-                }
-                centerComponent={
-                    <Text style={styles.header_title}>
-                        Recuperar senha
-                    </Text>
-                }
+            <MainHeader
+                iconLeft={{type: 'ionicon', name: 'arrow-back', onPress: () => navigation.goBack()}}
+                headerTitle="Recuperar senha"
             />
 
             <View style={styles.recover_container}>
-
-                <StatusBar backgroundColor={styles.status_bar.backgroundColor} />
 
                 <Card
                 containerStyle={styles.tips_card}
@@ -99,15 +86,11 @@ export default function ForgotPassword({navigation}) {
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                    <Input
+                    <MainInput
                         {...field}
                         label="Email"
-                        labelStyle={styles.textfield_title}
-                        inputContainerStyle={{...styles.textfield,
-                            borderColor: errors?.userEmail && 'red'
-                        }}
-                        inputStyle={styles.input_text}
-                        leftIconContainerStyle={styles.left_icon_container}
+                        hasError={errors?.userEmail}
+                        errorMessage={errors.userEmail?.message}
                         leftIcon={
                             <Icon
                                 iconStyle={styles.icon}
@@ -118,8 +101,6 @@ export default function ForgotPassword({navigation}) {
                         keyboardType="email-address"
                         placeholder="Digite seu email"
                         onChangeText={field.onChange}
-                        renderErrorMessage={false}
-                        errorMessage={errors.userEmail?.message}
                     />
                 )}/>
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { styles } from "./styles";
-import { StyleSheet, View, BackHandler } from 'react-native';
-import { Header, Icon, Button, Text, Input, Divider } from 'react-native-elements'
+import { View, BackHandler } from 'react-native';
+import { Icon, Button, Text, Input, Divider } from 'react-native-elements'
+import MainHeader from '../../components/main_header';
 
 import AuthContext from '../../contexts/AuthContext';
 
@@ -21,38 +21,14 @@ export default function Home({ navigation }) {
     // Mostra o token salvo no aplicativo.
 
     return (
-        <>
-            <Header
-                containerStyle={styles.header_container}
-                leftComponent={
-                    <Icon
-                    iconStyle={styles.header_icon}
-                    underlayColor='white'
-                    type='feather'
-                    name='menu'
-                    size={30}
-                    onPress={() => undefined}
-                    />
-                }
-                centerComponent={
-                    <Text style={styles.header_title}>
-                        {getUserData.user?.name}
-                    </Text>
-                }
-                rightComponent={
-                    <Icon
-                    iconStyle={styles.header_icon}
-                    underlayColor='white'
-                    type='octicon'
-                    name='gear'
-                    size={28}
-                    onPress={() => navigation.push('Config')}
-                    />
-                }
+        <>  
+            <MainHeader
+                iconLeft={{type: 'ionicon', name: 'arrow-back', onPress: () => navigation.goBack()}}
+                iconRight={{type: 'octicon', name: 'gear', onPress: () => navigation.push('Config')}}
+                headerTitle="Recuperar senha"
             />
+            
             <View style={styles.container}>
-
-                <StatusBar backgroundColor={styles.status_bar.backgroundColor} />
 
                 <View style={styles.token_container}>
                     <Text style={styles.token_title}>
