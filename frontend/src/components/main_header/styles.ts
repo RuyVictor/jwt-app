@@ -9,17 +9,18 @@ export const styles = StyleSheet.create({
         backgroundColor: primary
     },
     header_container: {
-        backgroundColor: secondary,
+        backgroundColor: primary,
+        borderBottomWidth: 0,
         height: 90,
         paddingHorizontal: 14,
         zIndex: 1
     },
     header_title: {
-        color: primary,
+        color: secondary,
         fontSize: 24,
         fontFamily: main
     },
     header_icon: {
-        color: primary,
+        color: secondary,
     }
 });

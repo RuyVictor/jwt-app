@@ -1,8 +1,10 @@
 import React from 'react';
 import { styles } from "./styles";
 import { View } from 'react-native';
-import { Icon, Button, Text, Divider } from 'react-native-elements';
+import { Icon, Divider } from 'react-native-elements';
 import MainHeader from '../../components/main_header';
+import RequestWarning from '../../components/request_warning';
+import MainButton from '../../components/main_button';
 import MainInput from '../../components/main_input';
 import Toast from 'react-native-toast-message';
 
@@ -24,7 +26,10 @@ interface IFormInputs {
 }
 
 const schema = yup.object().shape({
-    userPwd: yup.string().required("Por favor adicione sua senha!"),
+    userPwd: yup
+    .string()
+    .min(6, 'No mínimo 6 caracteres!')
+    .required("Por favor adicione sua senha!"),
     userPwdConfirmation: yup
     .string()
     .test("passwords-match", "Senhas não conferem!", function (value) {
@@ -36,7 +41,7 @@ export default function ForgotPasswordChangePassword({route, navigation}) {
 
     const { email, code } = route.params as IRouteParams;
 
-    const { forgotPasswordChangePassword } = React.useContext(AuthContext);
+    const { forgotPasswordVerify } = React.useContext(AuthContext);
 
     const {
         handleSubmit,
@@ -53,12 +58,14 @@ export default function ForgotPasswordChangePassword({route, navigation}) {
     const handleGetNewPassword = async (data: IFormInputs) => {
         setAuthError('');
         console.log(data)
-        const status = await forgotPasswordChangePassword(email, code, data.userPwd)
+        const { status, message } = await forgotPasswordVerify(email, code, data.userPwd)
         if (status === 201) {
             Toast.show({ text1: 'Senha trocada com sucesso!', type: 'success' })
             navigation.navigate('SignIn')
-        } else if (status === 406) {
+        } else if (status === 406 && message === "Code is not equal!") {
             setAuthError('Código não confere!');
+        } else if (status === 406 && message === "Token expired!") {
+            setAuthError('Este código não existe ou já foi expirado!');
         } else if (status === 503) {
             setAuthError('Não foi possível se conectar ao servidor!');
         } else if (status === 500) {
@@ -89,7 +96,7 @@ export default function ForgotPasswordChangePassword({route, navigation}) {
                 render={({ field }) => (
                     <MainInput
                         {...field}
-                        label="Senha"
+                        label="Nova senha"
                         hasError={errors?.userPwd}
                         errorMessage={errors.userPwd?.message}
                         secureTextEntry={!showPassword}
@@ -110,7 +117,7 @@ export default function ForgotPasswordChangePassword({route, navigation}) {
                             onPress={handleShowPassword}
                             name={showPassword ? 'eye' : 'eye-off'}/>
                         }
-                        placeholder="Digite sua senha"
+                        placeholder="Digite sua nova senha"
                         onChangeText={field.onChange}
                         renderErrorMessage={false}
                     />
@@ -123,7 +130,7 @@ export default function ForgotPasswordChangePassword({route, navigation}) {
                 render={({ field }) => (
                     <MainInput
                         {...field}
-                        label="Confirmar senha"
+                        label="Redigite sua nova senha"
                         hasError={errors?.userPwdConfirmation}
                         errorMessage={errors.userPwdConfirmation?.message}
                         secureTextEntry={true}
@@ -135,43 +142,22 @@ export default function ForgotPasswordChangePassword({route, navigation}) {
                                 size={18}
                             />
                         }
-                        placeholder="Digite a mesma senha"
+                        placeholder="Redigite a mesma senha"
                         onChangeText={field.onChange}
                         renderErrorMessage={false}
                     />
                 )}/>
 
-                {authError !== "" &&
-
-                    <View style={{
-                        ...styles.horizontal_container,
-                        marginTop: 10,
-                        justifyContent: "center"
-                        }}
-                    >
-                        <Icon
-                            iconStyle={styles.warning_icon}
-                            type='font-awesome'
-                            name='warning'
-                            size={11}
-                        />
-                        <Text style={styles.auth_warning}>
-                            {authError}
-                        </Text>
-                    </View>
-                }
+                {authError !== "" && <RequestWarning warning={authError} />}
 
                 <Divider
                     style={styles.divider}
                     inset={true} insetType="middle"
-                    width={2}
+                    width={1}
                 />
 
-                <Button
-                    buttonStyle={styles.login_button}
-                    containerStyle={styles.login_button_container}
+                <MainButton
                     title="CONFIRMAR"
-                    iconRight
                     onPress={handleSubmit(handleGetNewPassword)}
                 />
             </View>

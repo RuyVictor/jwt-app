@@ -1,45 +1,31 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { EmailConfirmationDto } from './dto/email-confirmation.dto';
-import { EmailReconfirmationDto } from './dto/email-reconfirmation.dto';
-import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { ForgotPasswordCodeDto } from './dto/forgot-password-code.dto';
-import { ForgotPasswordChangePasswordDto } from './dto/forgot-password-change-password.dto';
+import { ConfirmEmailNotificationDto } from './dto/email-confirm-notification.dto';
+import { ConfirmEmailDto } from './dto/email-confirm.dto';
+import { ForgotPasswordNotificationDto } from './dto/forgot-password-notification.dto';
+import { ForgotPasswordVerifyDto } from './dto/forgot-password-verify.dto';
 import { MailService } from './mail.service';
 
 @Controller('mail')
 export class MailController {
   constructor(private readonly mailService: MailService) {}
 
-  @Post('send-confirm-email')
-  sendConfirmEmail(@Body() emailConfirmationDto: EmailConfirmationDto) {
-    return this.mailService.sendConfirmEmail(emailConfirmationDto);
+  @Post('confirm-email-notification')
+  confirmEmailNotification(@Body() confirmEmailNotificationDto: ConfirmEmailNotificationDto) {
+    return this.mailService.confirmEmailNotification(confirmEmailNotificationDto);
   }
 
-  @Post('reconfirm-email')
-  reconfirmEmail(@Body() emailReconfirmationDto: EmailReconfirmationDto) {
-    return this.mailService.reconfirmEmail(emailReconfirmationDto);
+  @Post('confirm-email')
+  confirmEmail(@Body() confirmEmailDto: ConfirmEmailDto) {
+    return this.mailService.confirmEmail(confirmEmailDto);
   }
 
-  @Post('forgot-password')
-  forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
-    return this.mailService.forgotPassword(forgotPasswordDto);
+  @Post('forgot-password-notification')
+  forgotPasswordNotification(@Body() forgotPasswordNotificationDto: ForgotPasswordNotificationDto) {
+    return this.mailService.forgotPasswordNotification(forgotPasswordNotificationDto);
   }
 
-  @Post('forgot-password-code')
-  forgotPasswordConfirmation(
-    @Body() forgotPasswordCodeDto: ForgotPasswordCodeDto,
-  ) {
-    return this.mailService.forgotPasswordCode(
-      forgotPasswordCodeDto,
-    );
-  }
-
-  @Post('forgot-password-change-password')
-  forgotPasswordChangePassword(
-    @Body() forgotPasswordChangePasswordDto: ForgotPasswordChangePasswordDto,
-  ) {
-    return this.mailService.forgotPasswordChangePassword(
-      forgotPasswordChangePasswordDto,
-    );
+  @Post('forgot-password-verify')
+  forgotPasswordVerify(@Body() forgotPasswordVerifyDto: ForgotPasswordVerifyDto) {
+    return this.mailService.forgotPasswordVerify(forgotPasswordVerifyDto);
   }
 }

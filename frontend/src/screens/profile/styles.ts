@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { theme } from '../../global/styles/theme';
 
 const { primary, secondary } = theme.colors;
-const { main } = theme.fonts;
+const { main, bold } = theme.fonts;
 
 export const styles = StyleSheet.create({
     container: {
@@ -17,20 +17,23 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    option_button: {
-        borderRadius: 4,
-        backgroundColor: secondary,
-        marginBottom: 10,
-        padding: 18
+    user_information_container: {
+        color: secondary,
+        marginLeft: 15,
     },
-    option_button_container: {
-        width: '100%',
-        borderRadius: 100,
+    profile_user_title: {
+        color: secondary,
+        fontSize: 27,
+        fontFamily: bold
+    },
+    profile_user_description: {
+        color: secondary,
+        fontSize: 18,
+        fontFamily: main
     },
     version_label: {
         color: secondary,
-        marginTop: 20,
-        fontSize: 15,
+        fontSize: 12,
     },
     logout_label: {
         fontSize: 20,
@@ -45,6 +48,7 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         width: 200,
         borderRadius: 100,
+        elevation: 8
     },
     logout_button_icon: {
         color: primary,
@@ -73,10 +77,11 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         width: '46%',
         borderRadius: 100,
+        elevation: 10
     },
     divider: {
         alignSelf: 'center',
-        marginVertical: 8,
-        width: 170,
+        marginVertical: 5,
+        width: 40,
     }
 });

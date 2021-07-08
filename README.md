@@ -32,4 +32,19 @@ password: postgres;
 database: jwt_app;
 ```
 
->OBS: TODO BACKEND ESTÁ SENDO REFATORADO E MIGRADO PARA O NESTJS COM MAIS FUNCIONALIDADES COMO: RECUPERAR SENHA, CADASTRO E UPLOAD DE AVATAR!
+### Features:
+```
+- Logar usuário;
+- Registrar usuário;
+- Confirmação de email após o cadastro;
+- Validação via token para ações de email;
+- Esqueceu a senha;
+- Perfil de usuário => Em breve...;
+- Alterações no perfil de usuário => Em breve...;
+```
+
+
+### Collection:
+```
+Postman: https://documenter.getpostman.com/view/15988720/Tzm5HcDD
+```

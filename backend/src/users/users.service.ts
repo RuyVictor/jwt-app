@@ -50,7 +50,7 @@ export class UsersService {
     let userActions = this.userActionsRepository.create({ user: savedUser });
     await this.userActionsRepository.save(userActions);
 
-    await this.mailService.sendConfirmEmail(createUserDto);
+    await this.mailService.confirmEmailNotification(createUserDto);
   }
 
   async findAll(): Promise<User[]> {

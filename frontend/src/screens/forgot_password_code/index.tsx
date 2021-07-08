@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { styles, CELL_SIZE, CELL_BORDER_RADIUS } from "./styles";
 import { View, TouchableOpacity, Animated } from 'react-native';
-import { Icon, Text, Divider } from 'react-native-elements';
+import { Text, Divider } from 'react-native-elements';
 import MainHeader from '../../components/main_header';
+import RequestWarning from '../../components/request_warning';
 import Toast from 'react-native-toast-message';
 
 import { theme } from '../../global/styles/theme';
@@ -27,18 +28,21 @@ export default function ForgotPasswordCode({route, navigation}) {
 
     const { email } = route.params as IRouteParams;
 
-    const { forgotPassword, forgotPasswordCode } = React.useContext(AuthContext);
+    const { forgotPassword, forgotPasswordVerify } = React.useContext(AuthContext);
 
     // WARNINGS
     const [authError, setAuthError] = React.useState('');
     
     const handleVerifyCode = async () => {
         setAuthError('');
-        const status = await forgotPasswordCode(email, codeValue)
+        const { status, message } = await forgotPasswordVerify(email, codeValue)
         if (status === 201) {
             navigation.navigate('ForgotPasswordChangePassword', {email, code: codeValue})
-        } else if (status === 406) {
+        } else if (status === 406 && message === "Code is not equal!") {
             setAuthError('O código não confere!');
+            setCodeValue('')
+        } else if (status === 406 && message === "Token expired!") {
+            setAuthError('Este código não existe ou já foi expirado!');
             setCodeValue('')
         } else if (status === 503) {
             setAuthError('Não foi possível se conectar ao servidor!');
@@ -162,30 +166,12 @@ export default function ForgotPasswordCode({route, navigation}) {
                     renderCell={renderCell}
                 />
 
-                {authError !== "" &&
-
-                    <View style={{
-                        ...styles.horizontal_container,
-                        marginTop: 10,
-                        justifyContent: "center"
-                        }}
-                    >
-                        <Icon
-                            iconStyle={styles.warning_icon}
-                            type='font-awesome'
-                            name='warning'
-                            size={11}
-                        />
-                        <Text style={styles.auth_warning}>
-                            {authError}
-                        </Text>
-                    </View>
-                }
+                {authError !== "" && <RequestWarning warning={authError}/>}
 
                 <Divider
                     style={styles.divider}
                     inset={true} insetType="middle"
-                    width={2}
+                    width={1}
                 />
 
                 <TouchableOpacity onPress={handleSendCodeAgain}>

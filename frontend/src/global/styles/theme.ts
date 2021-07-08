@@ -1,10 +1,12 @@
 export const theme = {
     colors: {
         primary: '#DDDDDD',
-        secondary: '#222831'
+        secondary: '#222831',
+        tertiary: '#d4d4d4',
+        warningColor: '#ff8c00'
     },
     fonts: {
-    	main: 'PTSansNarrowRegular',
-    	bold: 'PTSansNarrowBold'
+    	main: 'PT-Sans-Narrow-Regular',
+    	bold: 'PT-Sans-Narrow-Bold'
     }
 };

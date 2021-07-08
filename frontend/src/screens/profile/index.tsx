@@ -1,15 +1,16 @@
 import React from 'react';
 import { styles } from "./styles";
 import { View } from 'react-native';
-import { Icon, Overlay, Button, Text, Divider } from 'react-native-elements';
+import { Avatar, Icon, Overlay, Button, Text, Divider } from 'react-native-elements';
+import SecundaryButton from '../../components/secundary_button';
 import MainHeader from '../../components/main_header';
 
 // Contexts
 import AuthContext from '../../contexts/AuthContext';
 
-export default function Config({ navigation }) {
+export default function Profile({ navigation }) {
 
-    const { signOut } = React.useContext(AuthContext);
+    const { signOut, getUserData } = React.useContext(AuthContext);
 
     const [visible, setVisible] = React.useState(false);
 
@@ -26,40 +27,75 @@ export default function Config({ navigation }) {
         <>
             <MainHeader
                 iconLeft={{type: 'ionicon', name: 'arrow-back', onPress: () => navigation.goBack()}}
-                headerTitle="Configurações"
+                headerTitle="Perfil"
             />
 
             <View style={styles.container}>
-
                 <View style={{width: '90%'}}>
+                    
+                    <View style={{...styles.horizontal_container}}>
+                        <View style={styles.horizontal_container}>
+                            <Avatar
+                                rounded
+                                size={70}
+                                source={{
+                                    uri:
+                                    'https://pt.seaicons.com/wp-content/uploads/2015/09/Hacker-icon.png',
+                                }}
+                            />
 
-                    <Button
-                        buttonStyle={styles.option_button}
-                        containerStyle={styles.option_button_container}
-                        title="PERFIL"
+                            <View style={styles.user_information_container}>
+                                <Text style={styles.profile_user_title}>
+                                    {getUserData.user?.user_name}
+                                </Text>
+
+                                <Text style={styles.profile_user_description}>
+                                    {getUserData.user?.email /*Description...*/}
+                                </Text>
+                            </View>
+                        </View>
+
+                        <Icon
+                            underlayColor='white'
+                            type='feather'
+                            name='edit'
+                            size={27}
+                            onPress={() => undefined}
+                        />
+                    </View>
+
+                    <Divider style={{marginVertical: 13}}/>
+
+                    <SecundaryButton
+                        title="Mensagens"
+                        icon={{
+                            name: 'arrow-forward-ios',
+                            size: 23,
+                            position: 'right'
+                        }}
                         onPress={() => undefined}
                     />
 
-                    <Button
-                        buttonStyle={styles.option_button}
-                        containerStyle={styles.option_button_container}
-                        title="CONFIGURAÇÕES DO APLICATIVO"
+                    <SecundaryButton
+                        title="Trocar minha senha"
+                        icon={{
+                            name: 'arrow-forward-ios',
+                            size: 23,
+                            position: 'right'
+                        }}
                         onPress={() => undefined}
                     />
 
-                    <Button
-                        buttonStyle={styles.option_button}
-                        containerStyle={styles.option_button_container}
-                        title="SOBRE"
+                    <SecundaryButton
+                        title="Suporte"
+                        icon={{
+                            name: 'arrow-forward-ios',
+                            size: 23,
+                            position: 'right'
+                        }}
                         onPress={() => undefined}
                     />
 
-                    <Button
-                        buttonStyle={styles.option_button}
-                        containerStyle={styles.option_button_container}
-                        title="SUPORTE"
-                        onPress={() => undefined}
-                    />
                 </View>
 
                 <Text style={styles.version_label}>
@@ -74,7 +110,7 @@ export default function Config({ navigation }) {
                     <Divider
                         style={styles.divider}
                         inset={true} insetType="middle"
-                        width={2}
+                        width={1}
                     />
 
                     <Button

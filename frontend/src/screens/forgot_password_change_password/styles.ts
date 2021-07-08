@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { theme } from '../../global/styles/theme';
 
-const { primary, secondary } = theme.colors;
+const { primary, secondary, warningColor } = theme.colors;
 const { main } = theme.fonts;
 
 export const styles = StyleSheet.create({
@@ -18,15 +18,6 @@ export const styles = StyleSheet.create({
     horizontal_container: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    login_button: {
-        borderRadius: 100,
-        backgroundColor: secondary,
-    },
-    login_button_container: {
-        alignSelf: 'center',
-        width: '92%',
-        borderRadius: 100,
     },
     textfield_title: {
         marginVertical: 8,
@@ -46,23 +37,10 @@ export const styles = StyleSheet.create({
     input_text: {
         color: primary,
     },
-    warning_icon: {
-        color: '#ff8c00',
-        marginRight: 4
-    },
-    auth_warning: {
-        fontSize: 14,
-        fontFamily: main,
-        color: '#ff8c00',
-        textAlign: 'center',
-    },
     left_icon_container: {
         width: 25,
     },
     icon: {
-        color: primary,
-    },
-    arrow_icon: {
         color: primary,
     },
     divider: {

@@ -4,7 +4,9 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { styles } from "./styles";
 import { View, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
-import { Icon, Button, Text, Divider } from 'react-native-elements'
+import { Icon, Text, Divider } from 'react-native-elements';
+import RequestWarning from '../../components/request_warning';
+import MainButton from '../../components/main_button';
 import MainInput from '../../components/main_input';
 
 import { useForm, Controller } from "react-hook-form";
@@ -29,7 +31,6 @@ const schema = yup.object().shape({
 
 export default function SignIn({navigation}) {
 
-
     const { signIn } = React.useContext(AuthContext);
 
     const {
@@ -43,6 +44,7 @@ export default function SignIn({navigation}) {
 
     // WARNINGS
 
+    const input: any = React.createRef();
     const [authError, setAuthError] = React.useState('');
     
     // ACTIONS
@@ -75,98 +77,80 @@ export default function SignIn({navigation}) {
 
                 <View style={styles.signin_container}>
 
-                <Text style={styles.title}>
-                    JWT App
-                </Text>
+                    <Text style={styles.title}>
+                        JWT App
+                    </Text>
 
-                <Controller
-                name="userEmail"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                    <MainInput
-                        {...field}
-                        label="Email"
-                        hasError={errors?.userEmail}
-                        errorMessage={errors.userEmail?.message}
-                        leftIcon={
-                            <Icon
-                                iconStyle={styles.icon}
-                                name='email'
-                                size={18}
-                            />
-                        }
-                        keyboardType="email-address"
-                        placeholder="Digite seu email"
-                        onChangeText={field.onChange}
-                    />
-                )}/>
-
-                <Controller
-                name="userPwd"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                    <MainInput
-                        {...field}
-                        label="Senha"
-                        hasError={errors?.userPwd}
-                        errorMessage={errors.userPwd?.message}
-                        secureTextEntry={!showPassword}
-                        leftIcon={
-                            <Icon
-                                iconStyle={styles.icon}
-                                name='lock-closed-sharp'
-                                type='ionicon'
-                                size={18}
-                            />
-                        }
-                        rightIcon={
-                            <Icon
-                            iconStyle={styles.icon}
-                            type='ionicon'
-                            size={20}
-                            onPress={handleShowPassword}
-                            name={showPassword ? 'eye' : 'eye-off'}/>
-                        }
-                        placeholder="Digite sua senha"
-                        onChangeText={field.onChange}
-                    />
-                )}/>
-
-                {authError !== "" &&
-
-                    <View style={{...styles.horizontal_container, marginTop: 10}}>
-                        <Icon
-                            iconStyle={styles.warning_icon}
-                            type='font-awesome'
-                            name='warning'
-                            size={11}
+                    <Controller
+                    name="userEmail"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                        <MainInput
+                            {...field}
+                            label="Email"
+                            hasError={errors?.userEmail}
+                            errorMessage={errors.userEmail?.message}
+                            leftIcon={
+                                <Icon
+                                    iconStyle={styles.icon}
+                                    name='email'
+                                    size={18}
+                                />
+                            }
+                            keyboardType="email-address"
+                            placeholder="Digite seu email"
+                            onChangeText={field.onChange}
                         />
-                        <Text style={styles.auth_warning}>
-                            {authError}
-                        </Text>
-                    </View>
-                }
+                    )}/>
+
+                    <Controller
+                    name="userPwd"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                        <MainInput
+                            {...field}
+                            label="Senha"
+                            hasError={errors?.userPwd}
+                            errorMessage={errors.userPwd?.message}
+                            secureTextEntry={!showPassword}
+                            leftIcon={
+                                <Icon
+                                    iconStyle={styles.icon}
+                                    name='lock-closed-sharp'
+                                    type='ionicon'
+                                    size={18}
+                                />
+                            }
+                            rightIcon={
+                                <Icon
+                                iconStyle={styles.icon}
+                                type='ionicon'
+                                size={20}
+                                onPress={handleShowPassword}
+                                name={showPassword ? 'eye' : 'eye-off'}/>
+                            }
+                            placeholder="Digite sua senha"
+                            onChangeText={field.onChange}
+                        />
+                    )}/>
+
+                    {authError !== "" && <RequestWarning warning={authError} />}
 
                     <Divider
                         style={styles.divider}
                         inset={true} insetType="middle"
-                        width={2}
+                        width={1}
                     />
 
-                    <Button
-                        buttonStyle={styles.login_button}
-                        containerStyle={styles.login_button_container}
-                        title="ENTRAR  "
-                        icon={
-                            <Icon
-                            iconStyle={styles.arrow_icon}
-                            name='arrow-forward-ios'
-                            size={11}
-                            />
-                        }
-                        iconRight
+                    <MainButton
+                        title="ENTRAR"
+                        icon={{
+                            name: 'arrow-forward-ios',
+                            size: 11,
+                            position: 'right'
+                        }}
                         onPress={handleSubmit(handleSignIn)}
                     />
 

@@ -1,8 +1,10 @@
 import React from 'react';
 import { styles } from "./styles";
 import { View } from 'react-native';
-import { Card, Icon, Button, Text, Divider } from 'react-native-elements';
+import { Card, Icon, Text, Divider } from 'react-native-elements';
 import MainHeader from '../../components/main_header';
+import RequestWarning from '../../components/request_warning';
+import MainButton from '../../components/main_button';
 import MainInput from '../../components/main_input';
 import Toast from 'react-native-toast-message';
 
@@ -26,7 +28,7 @@ const schema = yup.object().shape({
 
 export default function ForgotPassword({navigation}) {
 
-    const { forgotPassword } = React.useContext(AuthContext);
+    const { forgotPasswordNotification } = React.useContext(AuthContext);
 
     const {
         handleSubmit,
@@ -43,7 +45,7 @@ export default function ForgotPassword({navigation}) {
     const handleRecoverPassword = async (data: IFormInputs) => {
         setAuthError('');
         console.log(data)
-        const status = await forgotPassword(data.userEmail)
+        const status = await forgotPasswordNotification(data.userEmail)
         if (status === 201) {
             Toast.show({ text1: 'O código foi enviado ao seu email!', type: 'success' })
             navigation.navigate('ForgotPasswordCode', {email: data.userEmail})
@@ -104,45 +106,22 @@ export default function ForgotPassword({navigation}) {
                     />
                 )}/>
 
-                {authError !== "" &&
-
-                    <View style={
-                        {...styles.horizontal_container,
-                            marginTop: 10,
-                            justifyContent: 'center'
-                        }
-                        }>
-                        <Icon
-                            iconStyle={styles.warning_icon}
-                            type='font-awesome'
-                            name='warning'
-                            size={11}
-                        />
-                        <Text style={styles.auth_warning}>
-                            {authError}
-                        </Text>
-                    </View>
-                }
+                {authError !== "" && <RequestWarning warning={authError} />}
 
                 <Divider
                     style={styles.divider}
                     inset={true} insetType="middle"
-                    width={2}
+                    width={1}
                 />
 
-                <Button
-                    buttonStyle={styles.login_button}
-                    containerStyle={styles.login_button_container}
-                    title="RECUPERAR  "
-                    icon={
-                        <Icon
-                        iconStyle={styles.arrow_icon}
-                        type="octicon"
-                        name='reply'
-                        size={11}
-                        />
-                    }
-                    iconRight
+                <MainButton
+                    title="RECUPERAR"
+                    icon={{
+                        type: "octicon",
+                        name: 'reply',
+                        position: 'right',
+                        size: 11
+                    }}
                     onPress={handleSubmit(handleRecoverPassword)}
                 />
             </View>

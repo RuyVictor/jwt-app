@@ -1,8 +1,10 @@
 import React from 'react';
 import { styles } from "./styles";
 import { View, ScrollView } from 'react-native';
-import { Icon, Button, Text, Divider } from 'react-native-elements';
+import { Icon, Text, Divider } from 'react-native-elements';
 import MainHeader from '../../components/main_header';
+import RequestWarning from '../../components/request_warning';
+import MainButton from '../../components/main_button';
 import MainInput from '../../components/main_input';
 import Toast from 'react-native-toast-message';
 
@@ -199,40 +201,22 @@ export default function SignUp({navigation}) {
                     />
                 )}/>
 
-                {authError !== "" &&
-
-                    <View style={{...styles.horizontal_container, marginTop: 10}}>
-                        <Icon
-                            iconStyle={styles.warning_icon}
-                            type='font-awesome'
-                            name='warning'
-                            size={11}
-                        />
-                        <Text style={styles.auth_warning}>
-                            {authError}
-                        </Text>
-                    </View>
-                }
+                {authError !== "" && <RequestWarning warning={authError} />}
 
                 <Divider
                     style={styles.divider}
                     inset={true} insetType="middle"
-                    width={2}
+                    width={1}
                 />
 
-                <Button
-                    buttonStyle={styles.login_button}
-                    containerStyle={styles.login_button_container}
-                    title="CADASTRAR  "
-                    icon={
-                        <Icon
-                        iconStyle={styles.arrow_icon}
-                        type='material'
-                        name='arrow-forward-ios'
-                        size={11}
-                        />
-                    }
-                    iconRight
+                <MainButton
+                    title="CADASTRAR"
+                    icon={{
+                        type: 'material',
+                        name: 'arrow-forward-ios',
+                        position: 'right',
+                        size: 11
+                    }}
                     onPress={handleSubmit(handleSignUp)}
                 />
             </ScrollView>

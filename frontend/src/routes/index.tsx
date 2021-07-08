@@ -13,7 +13,7 @@ import ForgotPassword from '../screens/forgot_password';
 import ForgotPasswordCode from '../screens/forgot_password_code';
 import ForgotPasswordChangePassword from '../screens/forgot_password_change_password';
 import Home from '../screens/home';
-import Config from '../screens/config';
+import Profile from '../screens/profile';
 
 // CONTEXT
 import AuthContext from '../contexts/AuthContext';
@@ -94,7 +94,6 @@ const Routes: React.FC = () => {
     const authContext = useMemo(
         () => ({
             signIn: async (email: string, password: string): Promise<number | undefined> => {
-
                 let response;
                 try {
                     response = await api.post('/auth/signin', {
@@ -164,10 +163,10 @@ const Routes: React.FC = () => {
                 }
             },
 
-            forgotPassword: async (email: string) => {
+            forgotPasswordNotification: async (email: string) => {
                 let response;
                 try {
-                    response = await api.post('/mail/forgot-password', {
+                    response = await api.post('/mail/forgot-password-notification', {
                         email
                     });
 
@@ -184,47 +183,24 @@ const Routes: React.FC = () => {
                 }
             },
 
-            forgotPasswordCode: async (email: string, code: string) => {
-
-                console.log(email + " " + code)
+            forgotPasswordVerify: async (email: string, code: string, password?: string) => {
                 let response;
                 try {
-                    response = await api.post('/mail/forgot-password-code', {
+                    response = await api.post('/mail/forgot-password-verify', {
                         email,
-                        code
+                        code,
+                        password
                     });
 
                     if (response.status === 201) {
-                        return response.status;
+                        return { status: response.status };
                     }
                 } catch (e) {
                     console.log(e);
                     if (e.response) {
-                        return e.response.status;
+                        return { status: e.response.status, message: e.response.data.message };
                     } else {
-                        return 503;
-                    }
-                }
-            },
-
-            forgotPasswordChangePassword: async (email: string, code: string, password: string) => {
-                let response;
-                try {
-                    response = await api.post('/mail/forgot-password-change-password', {
-                        email,
-                        password,
-                        code
-                    });
-
-                    if (response.status === 201) {
-                        return response.status;
-                    }
-                } catch (e) {
-                    console.log(e);
-                    if (e.response) {
-                        return e.response.status;
-                    } else {
-                        return 503;
+                        return { status: 503 };
                     }
                 }
             },
@@ -258,7 +234,7 @@ const Routes: React.FC = () => {
                     ) : (
                         <>
                             <Stack.Screen name="Home" component={Home} />
-                            <Stack.Screen name="Config" component={Config} />
+                            <Stack.Screen name="Profile" component={Profile} />
                         </>
                     )}
                 </Stack.Navigator>

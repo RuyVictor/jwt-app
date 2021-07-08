@@ -24,8 +24,8 @@ export default function Home({ navigation }) {
         <>  
             <MainHeader
                 iconLeft={{type: 'ionicon', name: 'arrow-back', onPress: () => navigation.goBack()}}
-                iconRight={{type: 'octicon', name: 'gear', onPress: () => navigation.push('Config')}}
-                headerTitle="Recuperar senha"
+                iconRight={{type: 'feather', name: 'user', onPress: () => navigation.push('Profile')}}
+                headerTitle="Home"
             />
             
             <View style={styles.container}>

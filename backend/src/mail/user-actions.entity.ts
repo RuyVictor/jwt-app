@@ -2,7 +2,6 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
   JoinColumn,
@@ -16,13 +15,7 @@ export class UserActions {
   id: string;
 
   @Column({ nullable: true })
-  email_confirmation_token: string;
-
-  @Column({ nullable: true })
-  forgot_password_token: string;
-
-  @CreateDateColumn()
-  created_at: Date;
+  validation_token: string;
 
   @UpdateDateColumn()
   updated_at: Date;

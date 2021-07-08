@@ -6,16 +6,16 @@ import { UserActions } from './user-actions.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 
 import { WelcomeNewUserDto } from './dto/welcome-new-user.dto';
-import { EmailConfirmationDto } from './dto/email-confirmation.dto';
-import { EmailReconfirmationDto } from './dto/email-reconfirmation.dto';
-import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { ForgotPasswordCodeDto } from './dto/forgot-password-code.dto';
-import { ForgotPasswordChangePasswordDto } from './dto/forgot-password-change-password.dto';
+import { ConfirmEmailNotificationDto } from './dto/email-confirm-notification.dto';
+import { ConfirmEmailDto } from './dto/email-confirm.dto';
+import { ForgotPasswordNotificationDto } from './dto/forgot-password-notification.dto';
+import { ForgotPasswordVerifyDto } from './dto/forgot-password-verify.dto';
 
 import { NotFoundException } from 'src/errors/not-found.exception';
 import { NotAcceptableException } from 'src/errors/not-acceptable.exception';
 
 import * as bcrypt from 'bcryptjs';
+import { Response } from 'express';
 
 @Injectable()
 export class MailService {
@@ -39,11 +39,11 @@ export class MailService {
       .catch(() => {});
   }
 
-  async sendConfirmEmail(
-    emailConfirmationDto: EmailConfirmationDto,
+  async confirmEmailNotification(
+    confirmEmailNotificationDto: ConfirmEmailNotificationDto,
   ): Promise<void> {
     const foundUser = await this.usersRepository.findOne({
-      where: { email: emailConfirmationDto.email },
+      where: { email: confirmEmailNotificationDto.email },
       relations: ['user_actions'],
     });
 
@@ -54,12 +54,12 @@ export class MailService {
     let code = String(Math.floor(Math.random() * 90000) + 10000);
 
     await this.userActionsRepository.update(foundUser.user_actions.id, {
-      email_confirmation_token: code,
+      validation_token: code,
     });
 
     this.mailerService
       .sendMail({
-        to: emailConfirmationDto.email, // list of receivers
+        to: confirmEmailNotificationDto.email, // list of receivers
         from: process.env.EMAIL_SENDER, // sender address
         subject: 'JWT-APP Confirmação de email', // Subject line
         html: `<b>Seu código de ativação é ${code}</b>`, // HTML body content
@@ -68,11 +68,11 @@ export class MailService {
       .catch(() => {});
   }
 
-  async reconfirmEmail(
-    emailReconfirmationDto: EmailReconfirmationDto,
+  async confirmEmail(
+    confirmEmailDto: ConfirmEmailDto,
   ): Promise<void> {
     const foundUser = await this.usersRepository.findOne({
-      where: { email: emailReconfirmationDto.email },
+      where: { email: confirmEmailDto.email },
       relations: ['user_actions'],
     });
 
@@ -80,9 +80,20 @@ export class MailService {
       throw new NotFoundException();
     }
 
+    const currentTime = new Date();
+    const expiryTimeMinutes = 10;
+    const expiryTime = foundUser.user_actions.updated_at;
+    expiryTime.setTime(expiryTime.getTime() + (expiryTimeMinutes * 60 * 1000));
+    
+    if (expiryTime.getTime() < currentTime.getTime()) {
+      throw new NotAcceptableException('Token expired!');
+    }
+
     if (
-      foundUser.user_actions.email_confirmation_token !==
-      emailReconfirmationDto.code
+      foundUser.user_actions.validation_token !==
+      confirmEmailDto.code &&
+      foundUser.user_actions.validation_token !==
+      ""
     ) {
       throw new NotAcceptableException('Code is not equal!');
     }
@@ -92,9 +103,11 @@ export class MailService {
     this.welcomeNewUser(foundUser);
   }
 
-  async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+  async forgotPasswordNotification(
+    forgotPasswordNotificationDto: ForgotPasswordNotificationDto
+    ): Promise<void> {
     const foundUser = await this.usersRepository.findOne({
-      where: { email: forgotPasswordDto.email },
+      where: { email: forgotPasswordNotificationDto.email },
       relations: ['user_actions'],
     });
 
@@ -105,12 +118,12 @@ export class MailService {
     let code = String(Math.floor(Math.random() * 90000) + 10000);
 
     await this.userActionsRepository.update(foundUser.user_actions.id, {
-      forgot_password_token: code,
+      validation_token: code,
     });
 
     this.mailerService
       .sendMail({
-        to: forgotPasswordDto.email, // list of receivers
+        to: forgotPasswordNotificationDto.email, // list of receivers
         from: process.env.EMAIL_SENDER, // sender address
         subject: 'JWT-APP Recuperação de senha', // Subject line
         html: `<b>Seu código de ativação é ${code}</b>`, // HTML body content
@@ -119,11 +132,11 @@ export class MailService {
       .catch(() => {});
   }
 
-  async forgotPasswordCode(
-    forgotPasswordCodeDto: ForgotPasswordCodeDto,
+  async forgotPasswordVerify(
+    forgotPasswordVerifyDto: ForgotPasswordVerifyDto,
   ): Promise<void> {
     const foundUser = await this.usersRepository.findOne({
-      where: { email: forgotPasswordCodeDto.email },
+      where: { email: forgotPasswordVerifyDto.email },
       relations: ['user_actions'],
     });
 
@@ -131,35 +144,27 @@ export class MailService {
       throw new NotFoundException();
     }
 
-    if (
-      foundUser.user_actions.forgot_password_token !==
-      forgotPasswordCodeDto.code
-    ) {
-      throw new NotAcceptableException('Code is not equal!');
-    }
-  }
-
-  async forgotPasswordChangePassword(
-    forgotPasswordChangePasswordDto: ForgotPasswordChangePasswordDto,
-  ): Promise<void> {
-    const foundUser = await this.usersRepository.findOne({
-      where: { email: forgotPasswordChangePasswordDto.email },
-      relations: ['user_actions'],
-    });
-
-    if (!foundUser) {
-      throw new NotFoundException();
+    const currentTime = new Date();
+    const expiryTimeMinutes = 10;
+    const expiryTime = foundUser.user_actions.updated_at;
+    expiryTime.setTime(expiryTime.getTime() + (expiryTimeMinutes * 60 * 1000));
+    
+    if (expiryTime.getTime() < currentTime.getTime()) {
+      throw new NotAcceptableException('Token expired!');
     }
 
     if (
-      foundUser.user_actions.forgot_password_token !==
-      forgotPasswordChangePasswordDto.code
+      foundUser.user_actions.validation_token !==
+      forgotPasswordVerifyDto.code &&
+      foundUser.user_actions.validation_token !==
+      ""
     ) {
       throw new NotAcceptableException('Code is not equal!');
     }
 
-    let newPassword = await bcrypt.hash(forgotPasswordChangePasswordDto.password, 8);
-
-    await this.usersRepository.update(foundUser.id, {password: newPassword});
+    if (forgotPasswordVerifyDto.password) {
+      let newPassword = await bcrypt.hash(forgotPasswordVerifyDto.password, 8);
+      await this.usersRepository.update(foundUser.id, {password: newPassword});
+    }
   }
 }
