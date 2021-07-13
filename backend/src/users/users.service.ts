@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult, DeleteResult } from 'typeorm';
 import { User } from './user.entity';
 import { UserActions } from 'src/mail/user-actions.entity';
+import * as bcrypt from 'bcryptjs';
 
 import { MailService } from 'src/mail/mail.service';
 
@@ -11,6 +12,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 import { ConflictException } from '../errors/conflict.exception';
 import { NotFoundException } from 'src/errors/not-found.exception';
+import { UnauthorizedException } from 'src/errors/unauthorized.exception';
 
 @Injectable()
 export class UsersService {
@@ -71,22 +73,40 @@ export class UsersService {
     id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UpdateResult> {
-    const user = await this.usersRepository.update(id, updateUserDto);
 
-    if (user.affected === 0) {
-      throw new NotFoundException();
+    const foundUser = await this.usersRepository
+    .createQueryBuilder('user')
+    .where('user.id = :id', { id })
+    .addSelect('user.password')
+    .getOne();
+
+    if (!foundUser) {
+      throw new UnauthorizedException();
     }
 
-    return user;
-  }
+    // Caso exiga a troca do email
+    if (updateUserDto.email) {
 
-  async delete(id: string): Promise<DeleteResult> {
-    const user = await this.usersRepository.delete(id);
+      const foundUserWithSameEmail = await this.usersRepository.findOne({where: {email: updateUserDto.email}})
 
-    if (user.affected === 0) {
-      throw new NotFoundException();
+      if (foundUserWithSameEmail) {
+        throw new ConflictException('Email address already used.');
+      }
+
+      // exiga a senha do usuário !PARA TER A CERTEZA DE QUE ESTE USUÁRIO SEJA REALMENTE O DONO DA CONTA PARA FAZER A ALTERAÇÃO!
+      const passwordMatched = await bcrypt.compare(
+        updateUserDto.password,
+        foundUser.password,
+      );
+  
+      if (!passwordMatched) {
+        throw new UnauthorizedException();
+      }
+
+      return await this.usersRepository.update(id, updateUserDto);
+    } else {
+      return await this.usersRepository.update(id, updateUserDto);
     }
-
-    return user;
+    
   }
 }

@@ -36,11 +36,11 @@ export default function Profile({ navigation }) {
                     <View style={{...styles.horizontal_container}}>
                         <View style={styles.horizontal_container}>
                             <Avatar
+                                containerStyle={styles.avatar_container}
                                 rounded
                                 size={70}
                                 source={{
-                                    uri:
-                                    'https://pt.seaicons.com/wp-content/uploads/2015/09/Hacker-icon.png',
+                                    uri: getUserData.user?.avatar,
                                 }}
                             />
 
@@ -60,7 +60,7 @@ export default function Profile({ navigation }) {
                             type='feather'
                             name='edit'
                             size={27}
-                            onPress={() => undefined}
+                            onPress={() => navigation.navigate('EditProfile')}
                         />
                     </View>
 
@@ -77,7 +77,27 @@ export default function Profile({ navigation }) {
                     />
 
                     <SecundaryButton
+                        title="Informações de contato"
+                        icon={{
+                            name: 'arrow-forward-ios',
+                            size: 23,
+                            position: 'right'
+                        }}
+                        onPress={() => navigation.navigate('EditContactInformation')}
+                    />
+
+                    <SecundaryButton
                         title="Trocar minha senha"
+                        icon={{
+                            name: 'arrow-forward-ios',
+                            size: 23,
+                            position: 'right'
+                        }}
+                        onPress={() => undefined}
+                    />
+
+                    <SecundaryButton
+                        title="Configurações"
                         icon={{
                             name: 'arrow-forward-ios',
                             size: 23,
@@ -97,10 +117,6 @@ export default function Profile({ navigation }) {
                     />
 
                 </View>
-
-                <Text style={styles.version_label}>
-                    Versão do aplicativo: 1.0.0
-                </Text>
 
                 <View>
                     <Text style={styles.logout_label}>

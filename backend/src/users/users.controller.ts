@@ -4,7 +4,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -31,10 +30,5 @@ export class UsersController {
   @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
-  }
-
-  @Delete('delete/:id')
-  async delete(@Param('id') id: string) {
-    return this.usersService.delete(id);
   }
 }

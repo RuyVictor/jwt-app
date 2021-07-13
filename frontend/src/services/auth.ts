@@ -3,21 +3,22 @@ import api from "./api";
 import * as SecureStore from 'expo-secure-store';
 
 interface IUserRequest {
-    user: IUser;
-    token: string;
+    user?: IUser;
+    token?: string;
 };
 
 interface IUser {
-    user_name?: string;
-    email?: string;
-    password?: string;
-    avatar?: string;
-    verified?: string;
+    id: string;
+    user_name: string;
+    email: string;
+    password: string;
+    avatar: string;
+    verified: string;
 }
 
 const AuthProvider = () => {
 
-    const [currentUserData, setCurrentUserData] = React.useState<IUser>({});
+    const [currentUserData, setCurrentUserData] = React.useState<IUserRequest>({});
 
     async function saveUserData(data: IUserRequest) {
         try {
@@ -38,10 +39,9 @@ const AuthProvider = () => {
                     });
     
                     if (response.status === 201) {
-                        let data = response.data;
-                        saveUserData(data); // Salva o usuário no secure storage
-                        setCurrentUserData(data as IUser)
-                        api.defaults.headers.common["Authorization"] = data.token;
+                        saveUserData(response.data); // Salva o usuário no secure storage
+                        setCurrentUserData(response.data)
+                        api.defaults.headers.common["Authorization"] = "Bearer ".concat(response.data.token!);
                     }
                 } catch (e) {
                     console.log(e);
@@ -80,6 +80,52 @@ const AuthProvider = () => {
                 setCurrentUserData({})
             },
 
+            reloadUserData: async (): Promise<number | undefined> => {
+                let response;
+                try {
+                    response = await api.get<IUser>(`/users/findOne/${currentUserData.user?.id}`);
+    
+                    if (response.status === 200) {
+                        const updatedUser = {
+                            user: { ...currentUserData.user, ...response.data },
+                            token: currentUserData.token
+                        }
+                        saveUserData(updatedUser); // Salva o usuário no secure storage
+                        setCurrentUserData(updatedUser)
+                    }
+                } catch (e) {
+                    console.log(e);
+                    if (e.response) {
+                        return e.response.status;
+                    } else {
+                        return 503;
+                    }
+                }
+            },
+
+            updateUser: async (data: IUser): Promise<number | undefined> => {
+                let response;
+                try {
+                    response = await api.patch(`/users/update/${currentUserData.user?.id}`, {
+                        user_name: data.user_name,
+                        email: data.email,
+                        password: data.password,
+                    });
+    
+                    if (response.status === 200) {
+                        return response.status;
+                    }
+                } catch (e) {
+                    console.log(e);
+                    if (e.response) {
+                        console.log(e.response.data)
+                        return e.response.status;
+                    } else {
+                        return 503;
+                    }
+                }
+            },
+
             validateToken: async (): Promise<{isLoading: boolean} | undefined> => {
                 let response;
 
@@ -93,12 +139,12 @@ const AuthProvider = () => {
                         return { isLoading: false }
                     }
 
-                    api.defaults.headers.common["Authorization"] = userData.token;
+                    api.defaults.headers.common["Authorization"] = "Bearer ".concat(userData.token!);
 
                     response = await api.get('/auth/validate');
 
                     if (response.status === 200) {
-                        setCurrentUserData(userData as IUser) // Salva apenas as informações do usuário.
+                        setCurrentUserData(userData) // Salva apenas as informações do usuário.
                         return { isLoading: false }
                     }
 

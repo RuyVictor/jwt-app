@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { CardStyleInterpolators } from '@react-navigation/stack';
 
 // SCREENS
 import SignIn from '../screens/sign_in';
@@ -14,19 +14,18 @@ const Stack = createStackNavigator();
 
 const AuthRoutes: React.FC = () => {
     return (
-        <NavigationContainer>
-            <Stack.Navigator
-                screenOptions={{
-                    headerShown: false,
-                }}
-            >
-                <Stack.Screen name="SignIn" component={SignIn} />
-                <Stack.Screen name="SignUp" component={SignUp} />
-                <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-                <Stack.Screen name="ForgotPasswordCode" component={ForgotPasswordCode} />
-                <Stack.Screen name="ForgotPasswordChangePassword" component={ForgotPasswordChangePassword} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid
+            }}
+        >
+            <Stack.Screen name="SignIn" component={SignIn} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+            <Stack.Screen name="ForgotPasswordCode" component={ForgotPasswordCode} />
+            <Stack.Screen name="ForgotPasswordChangePassword" component={ForgotPasswordChangePassword} />
+        </Stack.Navigator>
     );
 };
 

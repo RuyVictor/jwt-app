@@ -39,8 +39,8 @@ database: jwt_app;
 - Confirmação de email após o cadastro;
 - Validação via token para ações de email;
 - Esqueceu a senha;
-- Perfil de usuário => Em breve...;
-- Alterações no perfil de usuário => Em breve...;
+- Perfil de usuário;
+- Alterações no perfil de usuário;
 ```
 
 

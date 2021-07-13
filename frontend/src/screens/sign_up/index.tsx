@@ -79,7 +79,7 @@ export default function SignUp({navigation}) {
             password: data.userPwd
         })
         if (status === 201) {
-            Toast.show({ text1: 'Cadastrado com sucesso!', type: 'success'})
+            Toast.show({ text1: 'Cadastrado(a) com sucesso!', type: 'success'})
             navigation.navigate('SignIn')
         } else if (status === 404 || status === 503) {
           setAuthError("Não foi possível se conectar ao servidor!");
@@ -107,6 +107,7 @@ export default function SignUp({navigation}) {
                         {...field}
                         label="Nome"
                         hasError={errors?.userName}
+                        maxLength={20}
                         errorMessage={errors.userName?.message}
                         leftIcon={
                             <Icon
@@ -153,6 +154,7 @@ export default function SignUp({navigation}) {
                         {...field}
                         label="Senha"
                         hasError={errors?.userPwd}
+                        maxLength={20}
                         errorMessage={errors.userPwd?.message}
                         secureTextEntry={!showPassword}
                         leftIcon={
@@ -196,7 +198,7 @@ export default function SignUp({navigation}) {
                                 size={18}
                             />
                         }
-                        placeholder="Digite a mesma senha"
+                        placeholder="Redigite a mesma senha"
                         onChangeText={field.onChange}
                     />
                 )}/>

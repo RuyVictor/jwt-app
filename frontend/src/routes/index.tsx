@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import { NavigationContainer } from '@react-navigation/native';
 // SCREENS
 import SplashScreen from '../screens/splash_screen';
 import AuthRoutes from './auth.routes';
@@ -32,7 +32,11 @@ const Routes: React.FC = () => {
         return <SplashScreen/>;
     }
 
-    return Object.keys(getUserData).length !== 0 ? <AppRoutes /> : <AuthRoutes />
+    return (
+        <NavigationContainer>
+            { Object.keys(getUserData).length !== 0 ? <AppRoutes /> : <AuthRoutes /> }
+        </NavigationContainer>
+    )
 };
 
 export default Routes;

@@ -17,12 +17,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(user: LoginUserDto) {
+  async login(user: LoginUserDto): Promise<{user: User, token: string}> {
     const foundUser = await this.usersRepository
-      .createQueryBuilder('user')
-      .where('user.email = :email', { email: user.email })
-      .addSelect('user.password')
-      .getOne();
+    .createQueryBuilder('user')
+    .where('user.email = :email', { email: user.email })
+    .addSelect('user.password')
+    .getOne();
 
     if (!foundUser) {
       throw new UnauthorizedException();
@@ -37,7 +37,11 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload = { email: foundUser.email, user_name: foundUser.user_name };
+    const payload = {
+      id: foundUser.id,
+      email: foundUser.email,
+      user_name: foundUser.user_name
+    };
 
     delete foundUser.password;
 

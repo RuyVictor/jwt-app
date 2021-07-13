@@ -10,12 +10,15 @@ export const styles = StyleSheet.create({
         backgroundColor: primary,
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 15,
+        paddingBottom: 15,
     },
     horizontal_container: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    avatar_container: {
+        elevation: 5
     },
     user_information_container: {
         color: secondary,
