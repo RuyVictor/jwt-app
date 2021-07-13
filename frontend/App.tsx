@@ -6,30 +6,37 @@ import { toastConfig } from './src/components/toast_config'
 import Routes from './src/routes';
 import SplashScreen from './src/screens/splash_screen';
 
+// CONTEXT
+import AuthProvider from './src/services/auth';
+import AuthContext from './src/contexts/AuthContext';
+
 export default function App() {
 	const [fontsLoaded, setFontsLoaded] = React.useState(false)
 
+	const authProvider = AuthProvider();
+
 	React.useEffect(() => {
-
 		async function loadFonts() {
-		    await Font.loadAsync({
-		      'PT-Sans-Narrow-Regular': require('./src/assets/fonts/PTSansNarrow-Regular.ttf'),
-		      'PT-Sans-Narrow-Bold': require('./src/assets/fonts/PTSansNarrow-Bold.ttf')
-		    });
-		   	setFontsLoaded(true);
+			try {
+				await Font.loadAsync({
+				  'PT-Sans-Narrow-Regular': require('./src/assets/fonts/PTSansNarrow-Regular.ttf'),
+				  'PT-Sans-Narrow-Bold': require('./src/assets/fonts/PTSansNarrow-Bold.ttf')
+				});
+				setFontsLoaded(true);
+			} catch (e) {
+				console.log(e)
+			}
 		}
-
 		loadFonts();
 	}, [])
 
 	if (fontsLoaded) {
 	    return (
-	    	<>
-	    	<Routes/>
-	    	<Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
-	    	</>
+			<AuthContext.Provider value={authProvider}>
+				<Routes/>
+				<Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
+			</AuthContext.Provider>
 	    )
-    } else {
-      	return <SplashScreen/>;
     }
+    return <SplashScreen/>;
 }
