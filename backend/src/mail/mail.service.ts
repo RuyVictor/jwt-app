@@ -15,7 +15,6 @@ import { NotFoundException } from 'src/errors/not-found.exception';
 import { NotAcceptableException } from 'src/errors/not-acceptable.exception';
 
 import * as bcrypt from 'bcryptjs';
-import { Response } from 'express';
 
 @Injectable()
 export class MailService {
