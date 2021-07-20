@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 
@@ -25,8 +25,14 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('validate')
-  protectedRoute() {
+  @Post('refresh-token')
+  async refreshToken(@Headers('Authorization') token: string) {
+    return this.authService.refreshToken(token);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('test')
+  test() {
     return 'valid user';
   }
 }

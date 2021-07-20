@@ -22,11 +22,11 @@ export const styles = StyleSheet.create({
     },
     title: {
         fontSize: 40,
-        fontFamily: main
+        fontFamily: main,
     },
     warning_icon: {
         color: warningColor,
-        marginRight: 4
+        marginRight: 4,
     },
     auth_warning: {
         fontSize: 14,
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: main,
         color: secondary,
-        opacity: 0.6
+        opacity: 0.6,
     },
     icon: {
         color: primary,
@@ -48,6 +48,6 @@ export const styles = StyleSheet.create({
     divider: {
         alignSelf: 'center',
         marginVertical: 10,
-        width: '60%'
-    }
+        width: '60%',
+    },
 });

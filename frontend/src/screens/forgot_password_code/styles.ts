@@ -9,18 +9,18 @@ export const CELL_BORDER_RADIUS = 4;
 
 export const styles = StyleSheet.create({
     status_bar: {
-        backgroundColor: primary
+        backgroundColor: primary,
     },
     container: {
         flex: 1,
         backgroundColor: primary,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     header_container: {
         backgroundColor: secondary,
         height: 90,
         paddingHorizontal: 14,
-        zIndex: 1
+        zIndex: 1,
     },
     header_icon: {
         color: primary,
@@ -28,12 +28,12 @@ export const styles = StyleSheet.create({
     header_title: {
         color: primary,
         fontSize: 24,
-        fontFamily: main
+        fontFamily: main,
     },
     recover_container: {
         flex: 1,
         width: 280,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     horizontal_container: {
         flexDirection: 'row',
@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
     divider: {
         alignSelf: 'center',
         marginVertical: 10,
-        width: '60%'
+        width: '60%',
     },
     link: {
         textAlign: 'center',
@@ -84,12 +84,12 @@ export const styles = StyleSheet.create({
         marginRight: 4,
         fontFamily: main,
         color: secondary,
-        opacity: 0.6
+        opacity: 0.6,
     },
     link_bold: {
         fontSize: 18,
         fontFamily: bold,
         color: secondary,
-        opacity: 0.6
+        opacity: 0.6,
     },
 });

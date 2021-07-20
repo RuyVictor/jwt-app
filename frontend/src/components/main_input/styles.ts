@@ -9,13 +9,14 @@ export const styles = StyleSheet.create({
         marginVertical: 8,
         fontSize: 17,
         fontFamily: main,
-        color: secondary
+        color: secondary,
     },
     textfield: {
         width: '100%',
         height: 45,
         paddingHorizontal: 10,
-        borderWidth: 1,
+        borderWidth: 0,
+        borderBottomWidth: 0,
         borderRadius: 5,
         borderColor: primary,
         backgroundColor: secondary,

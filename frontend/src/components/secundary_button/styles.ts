@@ -21,10 +21,10 @@ export const styles = StyleSheet.create({
     button_title: {
         color: secondary,
         fontFamily: bold,
-        fontSize: 20
+        fontSize: 20,
     },
     icon: {
         color: secondary,
-        opacity: 0.7
+        opacity: 0.7,
     },
 });

@@ -7,13 +7,13 @@ const { main } = theme.fonts;
 
 export const styles = StyleSheet.create({
     status_bar: {
-        backgroundColor: primary
+        backgroundColor: primary,
     },
     container: {
         flex: 1,
         backgroundColor: primary,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     token_container: {
         width: 200,
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     header_title: {
         color: primary,
         fontSize: 24,
-        fontFamily: main
+        fontFamily: main,
     },
     header_icon: {
         color: primary,
@@ -34,6 +34,6 @@ export const styles = StyleSheet.create({
     token_title: {
         color: secondary,
         fontSize: 24,
-        fontFamily: main
+        fontFamily: main,
     },
 });

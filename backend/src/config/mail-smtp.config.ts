@@ -1,4 +1,6 @@
-export default {
+import { MailerOptions } from '@nestjs-modules/mailer';
+
+export default<MailerOptions> {
   transport: {
     host: 'smtp-mail.outlook.com',
     port: 587,

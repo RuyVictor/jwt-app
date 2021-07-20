@@ -36,8 +36,10 @@ database: jwt_app;
 ```
 - Logar usuário;
 - Registrar usuário;
+- Refresh token;
 - Confirmação de email após o cadastro;
 - Validação via token para ações de email;
+- Trocar senha;
 - Esqueceu a senha;
 - Perfil de usuário;
 - Alterações no perfil de usuário;
@@ -45,6 +47,4 @@ database: jwt_app;
 
 
 ### Collection:
-```
-Postman: https://documenter.getpostman.com/view/15988720/Tzm5HcDD
-```
+[Postman](https://documenter.getpostman.com/view/15988720/Tzm5HcDD)

@@ -10,28 +10,27 @@ export const styles = StyleSheet.create({
         backgroundColor: primary,
         alignItems: 'center',
     },
-    recover_container: {
-        flex: 1,
+    inputs_container: {
         width: 280,
+        flexGrow: 1,
         justifyContent: 'center',
     },
     horizontal_container: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
     },
-    tips_card: {
-        borderRadius: 4,
-        margin: 10,
+    title: {
+        fontSize: 40,
+        fontFamily: main,
     },
-    tips_text: {
-        marginLeft: 15,
-        fontSize: 17,
+    link: {
+        textAlign: 'center',
+        marginTop: 10,
+        fontSize: 20,
         fontFamily: main,
         color: secondary,
-    },
-    warning_icon: {
-        color: warningColor,
-        marginRight: 4,
+        opacity: 0.6,
     },
     icon: {
         color: primary,

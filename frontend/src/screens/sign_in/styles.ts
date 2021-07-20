@@ -20,11 +20,11 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 10
+        marginTop: 10,
     },
     title: {
         fontSize: 40,
-        fontFamily: main
+        fontFamily: main,
     },
     link: {
         textAlign: 'center',
@@ -32,13 +32,13 @@ export const styles = StyleSheet.create({
         marginRight: 4,
         fontFamily: main,
         color: secondary,
-        opacity: 0.6
+        opacity: 0.6,
     },
     link_bold: {
         fontSize: 18,
         fontFamily: bold,
         color: secondary,
-        opacity: 0.6
+        opacity: 0.6,
     },
     icon: {
         color: primary,
@@ -46,6 +46,6 @@ export const styles = StyleSheet.create({
     divider: {
         alignSelf: 'center',
         marginVertical: 10,
-        width: '60%'
-    }
+        width: '60%',
+    },
 });

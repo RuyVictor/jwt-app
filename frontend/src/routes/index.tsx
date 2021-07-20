@@ -16,27 +16,27 @@ const Routes: React.FC = () => {
     useEffect(() => {
         async function validation() {
             try {
-                let data = await validateToken()
+                const data = await validateToken();
                 if (data) {
-                    setLoading(data.isLoading)
+                    setLoading(data.isLoading);
                 }
             } catch (e) {
-                console.log(e)
+                console.log(e);
             }
         }
-        validation()
+        validation();
     }, []);
 
     if (loading) {
         // Esperando a validação do token.
-        return <SplashScreen/>;
+        return <SplashScreen />;
     }
 
     return (
         <NavigationContainer>
-            { Object.keys(getUserData).length !== 0 ? <AppRoutes /> : <AuthRoutes /> }
+            {Object.keys(getUserData).length !== 0 ? <AppRoutes /> : <AuthRoutes />}
         </NavigationContainer>
-    )
+    );
 };
 
 export default Routes;

@@ -9,10 +9,10 @@ export const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: primary,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     title: {
         fontSize: 50,
-        fontFamily: main
-    }
+        fontFamily: main,
+    },
 });

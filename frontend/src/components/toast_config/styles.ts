@@ -11,15 +11,15 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 15,
         backgroundColor: primary,
         borderRadius: 20,
-        elevation: 15
+        elevation: 15,
     },
     horizontal_container: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     warning_icon: {
         color: '#228c22',
-        marginRight: 14
+        marginRight: 14,
     },
     close_icon: {
         color: secondary,
@@ -28,6 +28,6 @@ export const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: main,
         color: secondary,
-        textAlign: 'justify'
-    }
+        textAlign: 'justify',
+    },
 });

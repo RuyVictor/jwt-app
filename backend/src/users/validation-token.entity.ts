@@ -7,20 +7,20 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { User } from 'src/users/user.entity';
+import { UserActions } from './user-actions.entity';
 
-@Entity('users_actions')
-export class UserActions {
+@Entity('validation_tokens')
+export class ValidationToken {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ nullable: true })
-  validation_token: string;
+  token: string;
 
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToOne(() => User, (User) => User.user_actions)
+  @OneToOne(() => UserActions, (UserActions) => UserActions.validation_token)
   @JoinColumn()
-  user: User;
+  user_actions: UserActions;
 }

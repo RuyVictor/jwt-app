@@ -1,5 +1,5 @@
 import React from 'react';
-import { styles } from "./styles";
+import { styles } from './styles';
 import { View } from 'react-native';
 import { Avatar, Icon, Overlay, Button, Text, Divider } from 'react-native-elements';
 import SecundaryButton from '../../components/secundary_button';
@@ -9,7 +9,6 @@ import MainHeader from '../../components/main_header';
 import AuthContext from '../../contexts/AuthContext';
 
 export default function Profile({ navigation }) {
-
     const { signOut, getUserData } = React.useContext(AuthContext);
 
     const [visible, setVisible] = React.useState(false);
@@ -26,14 +25,17 @@ export default function Profile({ navigation }) {
     return (
         <>
             <MainHeader
-                iconLeft={{type: 'ionicon', name: 'arrow-back', onPress: () => navigation.goBack()}}
+                iconLeft={{
+                    type: 'ionicon',
+                    name: 'arrow-back',
+                    onPress: () => navigation.goBack(),
+                }}
                 headerTitle="Perfil"
             />
 
             <View style={styles.container}>
-                <View style={{width: '90%'}}>
-                    
-                    <View style={{...styles.horizontal_container}}>
+                <View style={{ width: '90%' }}>
+                    <View style={{ ...styles.horizontal_container }}>
                         <View style={styles.horizontal_container}>
                             <Avatar
                                 containerStyle={styles.avatar_container}
@@ -56,22 +58,22 @@ export default function Profile({ navigation }) {
                         </View>
 
                         <Icon
-                            underlayColor='white'
-                            type='feather'
-                            name='edit'
+                            underlayColor="white"
+                            type="feather"
+                            name="edit"
                             size={27}
                             onPress={() => navigation.navigate('EditProfile')}
                         />
                     </View>
 
-                    <Divider style={{marginVertical: 13}}/>
+                    <Divider style={{ marginVertical: 13 }} />
 
                     <SecundaryButton
                         title="Mensagens"
                         icon={{
                             name: 'arrow-forward-ios',
                             size: 23,
-                            position: 'right'
+                            position: 'right',
                         }}
                         onPress={() => undefined}
                     />
@@ -81,7 +83,7 @@ export default function Profile({ navigation }) {
                         icon={{
                             name: 'arrow-forward-ios',
                             size: 23,
-                            position: 'right'
+                            position: 'right',
                         }}
                         onPress={() => navigation.navigate('EditContactInformation')}
                     />
@@ -91,9 +93,9 @@ export default function Profile({ navigation }) {
                         icon={{
                             name: 'arrow-forward-ios',
                             size: 23,
-                            position: 'right'
+                            position: 'right',
                         }}
-                        onPress={() => undefined}
+                        onPress={() => navigation.navigate('ChangePassword')}
                     />
 
                     <SecundaryButton
@@ -101,7 +103,7 @@ export default function Profile({ navigation }) {
                         icon={{
                             name: 'arrow-forward-ios',
                             size: 23,
-                            position: 'right'
+                            position: 'right',
                         }}
                         onPress={() => undefined}
                     />
@@ -111,23 +113,16 @@ export default function Profile({ navigation }) {
                         icon={{
                             name: 'arrow-forward-ios',
                             size: 23,
-                            position: 'right'
+                            position: 'right',
                         }}
                         onPress={() => undefined}
                     />
-
                 </View>
 
                 <View>
-                    <Text style={styles.logout_label}>
-                        Sair do aplicativo
-                    </Text>
+                    <Text style={styles.logout_label}>Sair do aplicativo</Text>
 
-                    <Divider
-                        style={styles.divider}
-                        inset={true} insetType="middle"
-                        width={1}
-                    />
+                    <Divider style={styles.divider} inset={true} insetType="middle" width={1} />
 
                     <Button
                         buttonStyle={styles.logout_button}
@@ -135,10 +130,10 @@ export default function Profile({ navigation }) {
                         title="SAIR  "
                         icon={
                             <Icon
-                            iconStyle={styles.logout_button_icon}
-                            type='material-community'
-                            name='logout-variant'
-                            size={18}
+                                iconStyle={styles.logout_button_icon}
+                                type="material-community"
+                                name="logout-variant"
+                                size={18}
                             />
                         }
                         iconRight
@@ -147,33 +142,34 @@ export default function Profile({ navigation }) {
                 </View>
 
                 <Overlay
-                isVisible={visible}
-                onBackdropPress={toggleOverlay}
-                overlayStyle={styles.modal_container}>
+                    isVisible={visible}
+                    onBackdropPress={toggleOverlay}
+                    overlayStyle={styles.modal_container}
+                >
+                    <Text style={styles.modal_title}>Sair da conta</Text>
 
-                    <Text style={styles.modal_title}>
-                        Sair da conta
-                    </Text>
+                    <Text style={styles.modal_label}>Tem certeza que deseja sair da conta?</Text>
 
-                    <Text style={styles.modal_label}>
-                        Tem certeza que deseja sair da conta?
-                    </Text>
-                    
-                    <View style={{...styles.horizontal_container, marginTop: 10}}>
+                    <View style={{ ...styles.horizontal_container, marginTop: 10 }}>
                         <Button
-                            buttonStyle={{...styles.modal_logout_button, backgroundColor: '#4AA96C'}}
+                            buttonStyle={{
+                                ...styles.modal_logout_button,
+                                backgroundColor: '#4AA96C',
+                            }}
                             containerStyle={styles.modal_logout_button_container}
                             title="SIM"
                             onPress={handleLogout}
                         />
 
                         <Button
-                            buttonStyle={{...styles.modal_logout_button, backgroundColor: '#ff1925'}}
+                            buttonStyle={{
+                                ...styles.modal_logout_button,
+                                backgroundColor: '#ff1925',
+                            }}
                             containerStyle={styles.modal_logout_button_container}
                             title="CANCELAR"
                             onPress={toggleOverlay}
                         />
-
                     </View>
                 </Overlay>
             </View>

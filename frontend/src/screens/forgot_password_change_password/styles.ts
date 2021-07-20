@@ -8,12 +8,12 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: primary,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     recover_container: {
         flex: 1,
         width: 280,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     horizontal_container: {
         flexDirection: 'row',
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
         marginVertical: 8,
         fontSize: 17,
         fontFamily: main,
-        color: secondary
+        color: secondary,
     },
     textfield: {
         width: '100%',
@@ -46,6 +46,6 @@ export const styles = StyleSheet.create({
     divider: {
         alignSelf: 'center',
         marginVertical: 10,
-        width: '60%'
-    }
+        width: '60%',
+    },
 });

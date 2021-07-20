@@ -1,7 +1,7 @@
 import React from 'react';
 import { styles } from './styles';
 import { View, ScrollView } from 'react-native';
-import { Icon, Text, Divider } from 'react-native-elements';
+import { Icon, Divider } from 'react-native-elements';
 import MainHeader from '../../components/main_header';
 import RequestWarning from '../../components/request_warning';
 import MainButton from '../../components/main_button';
@@ -16,37 +16,31 @@ import * as yup from 'yup';
 import AuthContext from '../../contexts/AuthContext';
 
 interface IFormInputs {
-    userName: string;
-    userEmail: string;
-    userPwd: string;
-    userPwdConfirmation: string;
+    userCurrentPwd: string;
+    userNewPwd: string;
+    userNewPwdConfirmation: string;
 }
 
 const schema = yup.object().shape({
-    userName: yup
-        .string()
-        .required('Por favor adicione seu nome!')
-        .matches(/^[A-zÀ-ú\s]+$/, 'Apenas caracteres alfabéticos!'),
-
-    userEmail: yup
-        .string()
-        .email('Por favor adicione um email válido!')
-        .required('Por favor adicione um email válido!'),
-
-    userPwd: yup
+    userCurrentPwd: yup
         .string()
         .min(6, 'No mínimo 6 caracteres!')
-        .required('Por favor adicione sua senha!'),
+        .required('Por favor adicione sua senha atual!'),
 
-    userPwdConfirmation: yup
+    userNewPwd: yup
+        .string()
+        .min(6, 'No mínimo 6 caracteres!')
+        .required('Por favor adicione sua nova senha!'),
+
+    userNewPwdConfirmation: yup
         .string()
         .test('passwords-match', 'Senhas não conferem!', function (value) {
-            return this.parent.userPwd === value;
+            return this.parent.userNewPwd === value;
         }),
 });
 
-export default function SignUp({ navigation }) {
-    const { signUp } = React.useContext(AuthContext);
+export default function ChangePassword({ navigation }) {
+    const { changePassword } = React.useContext(AuthContext);
 
     const {
         handleSubmit,
@@ -69,21 +63,17 @@ export default function SignUp({ navigation }) {
         setShowPassword(!showPassword);
     }
 
-    const handleSignUp = async (data: IFormInputs) => {
+    const handleChangePassword = async (data: IFormInputs) => {
         setAuthError('');
-        console.log(data);
-        const status = await signUp({
-            user_name: data.userName,
-            email: data.userEmail,
-            password: data.userPwd,
-        });
-        if (status === 201) {
-            Toast.show({ text1: 'Cadastrado(a) com sucesso!', type: 'success' });
-            navigation.navigate('SignIn');
+
+        const status = await changePassword(data.userCurrentPwd, data.userNewPwd);
+        if (status === 200) {
+            Toast.show({ text1: 'Senha trocada com sucesso!', type: 'success' });
+            navigation.navigate('Profile');
         } else if (status === 404 || status === 503) {
             setAuthError('Não foi possível se conectar ao servidor!');
-        } else if (status === 409) {
-            setAuthError('Este usuário já está cadastrado!');
+        } else if (status === 401) {
+            setAuthError('A senha digitada não corresponde com a sua senha atual!');
         }
     };
 
@@ -95,64 +85,47 @@ export default function SignUp({ navigation }) {
                     name: 'arrow-back',
                     onPress: () => navigation.goBack(),
                 }}
-                headerTitle="Cadastrar"
+                headerTitle="Trocar de senha"
             />
 
-            <ScrollView contentContainerStyle={styles.signup_container}>
+            <ScrollView contentContainerStyle={styles.inputs_container}>
                 <Controller
-                    name="userName"
+                    name="userCurrentPwd"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
                         <MainInput
                             {...field}
-                            label="Nome"
-                            hasError={errors?.userName}
+                            label="Senha atual"
+                            hasError={errors?.userCurrentPwd}
                             maxLength={20}
-                            errorMessage={errors.userName?.message}
+                            errorMessage={errors.userCurrentPwd?.message}
+                            secureTextEntry={true}
                             leftIcon={
                                 <Icon
                                     iconStyle={styles.icon}
-                                    name="user"
-                                    type="font-awesome"
+                                    name="lock-closed-sharp"
+                                    type="ionicon"
                                     size={18}
                                 />
                             }
-                            placeholder="Digite seu nome"
+                            placeholder="Digite sua senha atual"
                             onChangeText={field.onChange}
                         />
                     )}
                 />
 
                 <Controller
-                    name="userEmail"
+                    name="userNewPwd"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
                         <MainInput
                             {...field}
-                            label="Email"
-                            hasError={errors?.userEmail}
-                            errorMessage={errors.userEmail?.message}
-                            leftIcon={<Icon iconStyle={styles.icon} name="email" size={18} />}
-                            keyboardType="email-address"
-                            placeholder="Digite seu email"
-                            onChangeText={field.onChange}
-                        />
-                    )}
-                />
-
-                <Controller
-                    name="userPwd"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                        <MainInput
-                            {...field}
-                            label="Senha"
-                            hasError={errors?.userPwd}
+                            label="Nova senha"
+                            hasError={errors?.userNewPwd}
                             maxLength={20}
-                            errorMessage={errors.userPwd?.message}
+                            errorMessage={errors.userNewPwd?.message}
                             secureTextEntry={!showPassword}
                             leftIcon={
                                 <Icon
@@ -171,22 +144,22 @@ export default function SignUp({ navigation }) {
                                     name={showPassword ? 'eye' : 'eye-off'}
                                 />
                             }
-                            placeholder="Digite sua senha"
+                            placeholder="Digite sua nova senha"
                             onChangeText={field.onChange}
                         />
                     )}
                 />
 
                 <Controller
-                    name="userPwdConfirmation"
+                    name="userNewPwdConfirmation"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
                         <MainInput
                             {...field}
                             label="Confirmar senha"
-                            hasError={errors?.userPwdConfirmation}
-                            errorMessage={errors.userPwdConfirmation?.message}
+                            hasError={errors?.userNewPwdConfirmation}
+                            errorMessage={errors.userNewPwdConfirmation?.message}
                             secureTextEntry={true}
                             leftIcon={
                                 <Icon
@@ -196,7 +169,7 @@ export default function SignUp({ navigation }) {
                                     size={18}
                                 />
                             }
-                            placeholder="Redigite a mesma senha"
+                            placeholder="Redigite sua nova senha"
                             onChangeText={field.onChange}
                         />
                     )}
@@ -207,14 +180,14 @@ export default function SignUp({ navigation }) {
                 <Divider style={styles.divider} inset={true} insetType="middle" width={1} />
 
                 <MainButton
-                    title="CADASTRAR"
+                    title="TROCAR SENHA"
                     icon={{
                         type: 'material',
                         name: 'arrow-forward-ios',
                         position: 'right',
                         size: 11,
                     }}
-                    onPress={handleSubmit(handleSignUp)}
+                    onPress={handleSubmit(handleChangePassword)}
                 />
             </ScrollView>
         </View>

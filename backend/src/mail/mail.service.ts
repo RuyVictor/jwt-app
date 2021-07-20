@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
-import { UserActions } from './user-actions.entity';
+import { ValidationToken } from '../users/validation-token.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 
 import { WelcomeNewUserDto } from './dto/welcome-new-user.dto';
@@ -12,7 +12,7 @@ import { ForgotPasswordNotificationDto } from './dto/forgot-password-notificatio
 import { ForgotPasswordVerifyDto } from './dto/forgot-password-verify.dto';
 
 import { NotFoundException } from 'src/errors/not-found.exception';
-import { NotAcceptableException } from 'src/errors/not-acceptable.exception';
+import { UnauthorizedException } from 'src/errors/unauthorized.exception';
 
 import * as bcrypt from 'bcryptjs';
 
@@ -22,8 +22,8 @@ export class MailService {
     private readonly mailerService: MailerService,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    @InjectRepository(UserActions)
-    private userActionsRepository: Repository<UserActions>,
+    @InjectRepository(ValidationToken)
+    private validationTokenRepository: Repository<ValidationToken>,
   ) {}
 
   welcomeNewUser(welcomeNewUserDto: WelcomeNewUserDto): void {
@@ -52,8 +52,8 @@ export class MailService {
 
     let code = String(Math.floor(Math.random() * 90000) + 10000);
 
-    await this.userActionsRepository.update(foundUser.user_actions.id, {
-      validation_token: code,
+    await this.validationTokenRepository.update(foundUser.user_actions.validation_token.id, {
+      token: code
     });
 
     this.mailerService
@@ -67,9 +67,7 @@ export class MailService {
       .catch(() => {});
   }
 
-  async confirmEmail(
-    confirmEmailDto: ConfirmEmailDto,
-  ): Promise<void> {
+  async confirmEmail(confirmEmailDto: ConfirmEmailDto): Promise<void> {
     const foundUser = await this.usersRepository.findOne({
       where: { email: confirmEmailDto.email },
       relations: ['user_actions'],
@@ -81,20 +79,18 @@ export class MailService {
 
     const currentTime = new Date();
     const expiryTimeMinutes = 10;
-    const expiryTime = foundUser.user_actions.updated_at;
-    expiryTime.setTime(expiryTime.getTime() + (expiryTimeMinutes * 60 * 1000));
-    
+    const expiryTime = foundUser.user_actions.validation_token.updated_at;
+    expiryTime.setTime(expiryTime.getTime() + expiryTimeMinutes * 60 * 1000);
+
     if (expiryTime.getTime() < currentTime.getTime()) {
-      throw new NotAcceptableException('Token expired!');
+      throw new UnauthorizedException('Token expired!');
     }
 
     if (
-      foundUser.user_actions.validation_token !==
-      confirmEmailDto.code &&
-      foundUser.user_actions.validation_token !==
-      ""
+      foundUser.user_actions.validation_token.token !== confirmEmailDto.code &&
+      foundUser.user_actions.validation_token.token !== ''
     ) {
-      throw new NotAcceptableException('Code is not equal!');
+      throw new UnauthorizedException('Code is not equal!');
     }
 
     await this.usersRepository.update(foundUser.id, { verified: true });
@@ -103,8 +99,8 @@ export class MailService {
   }
 
   async forgotPasswordNotification(
-    forgotPasswordNotificationDto: ForgotPasswordNotificationDto
-    ): Promise<void> {
+    forgotPasswordNotificationDto: ForgotPasswordNotificationDto,
+  ): Promise<void> {
     const foundUser = await this.usersRepository.findOne({
       where: { email: forgotPasswordNotificationDto.email },
       relations: ['user_actions'],
@@ -116,8 +112,8 @@ export class MailService {
 
     let code = String(Math.floor(Math.random() * 90000) + 10000);
 
-    await this.userActionsRepository.update(foundUser.user_actions.id, {
-      validation_token: code,
+    await this.validationTokenRepository.update(foundUser.user_actions.validation_token.id, {
+      token: code,
     });
 
     this.mailerService
@@ -145,25 +141,26 @@ export class MailService {
 
     const currentTime = new Date();
     const expiryTimeMinutes = 10;
-    const expiryTime = foundUser.user_actions.updated_at;
-    expiryTime.setTime(expiryTime.getTime() + (expiryTimeMinutes * 60 * 1000));
-    
+    const expiryTime = foundUser.user_actions.validation_token.updated_at;
+    expiryTime.setTime(expiryTime.getTime() + expiryTimeMinutes * 60 * 1000);
+
     if (expiryTime.getTime() < currentTime.getTime()) {
-      throw new NotAcceptableException('Token expired!');
+      throw new UnauthorizedException('Token expired!');
     }
 
     if (
-      foundUser.user_actions.validation_token !==
-      forgotPasswordVerifyDto.code &&
-      foundUser.user_actions.validation_token !==
-      ""
+      foundUser.user_actions.validation_token.token !==
+        forgotPasswordVerifyDto.code &&
+      foundUser.user_actions.validation_token.token !== ''
     ) {
-      throw new NotAcceptableException('Code is not equal!');
+      throw new UnauthorizedException('Code is not equal!');
     }
 
     if (forgotPasswordVerifyDto.password) {
       let newPassword = await bcrypt.hash(forgotPasswordVerifyDto.password, 8);
-      await this.usersRepository.update(foundUser.id, {password: newPassword});
+      await this.usersRepository.update(foundUser.id, {
+        password: newPassword,
+      });
     }
   }
 }

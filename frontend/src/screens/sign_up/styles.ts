@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     signup_container: {
         width: 280,
         flexGrow: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     horizontal_container: {
         flexDirection: 'row',
@@ -22,17 +22,7 @@ export const styles = StyleSheet.create({
     },
     title: {
         fontSize: 40,
-        fontFamily: main
-    },
-    warning_icon: {
-        color: warningColor,
-        marginRight: 4
-    },
-    auth_warning: {
-        fontSize: 14,
         fontFamily: main,
-        color: warningColor,
-        textAlign: 'center',
     },
     link: {
         textAlign: 'center',
@@ -40,7 +30,7 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: main,
         color: secondary,
-        opacity: 0.6
+        opacity: 0.6,
     },
     icon: {
         color: primary,
@@ -48,6 +38,6 @@ export const styles = StyleSheet.create({
     divider: {
         alignSelf: 'center',
         marginVertical: 10,
-        width: '60%'
-    }
+        width: '60%',
+    },
 });

@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     },
     warning_icon: {
         color: warningColor,
-        marginRight: 4
+        marginRight: 4,
     },
     warning_text: {
         fontSize: 14,

@@ -10,8 +10,12 @@ export class MailController {
   constructor(private readonly mailService: MailService) {}
 
   @Post('confirm-email-notification')
-  confirmEmailNotification(@Body() confirmEmailNotificationDto: ConfirmEmailNotificationDto) {
-    return this.mailService.confirmEmailNotification(confirmEmailNotificationDto);
+  confirmEmailNotification(
+    @Body() confirmEmailNotificationDto: ConfirmEmailNotificationDto,
+  ) {
+    return this.mailService.confirmEmailNotification(
+      confirmEmailNotificationDto,
+    );
   }
 
   @Post('confirm-email')
@@ -20,12 +24,18 @@ export class MailController {
   }
 
   @Post('forgot-password-notification')
-  forgotPasswordNotification(@Body() forgotPasswordNotificationDto: ForgotPasswordNotificationDto) {
-    return this.mailService.forgotPasswordNotification(forgotPasswordNotificationDto);
+  forgotPasswordNotification(
+    @Body() forgotPasswordNotificationDto: ForgotPasswordNotificationDto,
+  ) {
+    return this.mailService.forgotPasswordNotification(
+      forgotPasswordNotificationDto,
+    );
   }
 
   @Post('forgot-password-verify')
-  forgotPasswordVerify(@Body() forgotPasswordVerifyDto: ForgotPasswordVerifyDto) {
+  forgotPasswordVerify(
+    @Body() forgotPasswordVerifyDto: ForgotPasswordVerifyDto,
+  ) {
     return this.mailService.forgotPasswordVerify(forgotPasswordVerifyDto);
   }
 }

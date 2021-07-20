@@ -17,14 +17,17 @@ const AuthRoutes: React.FC = () => {
         <Stack.Navigator
             screenOptions={{
                 headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid
+                cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid,
             }}
         >
             <Stack.Screen name="SignIn" component={SignIn} />
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
             <Stack.Screen name="ForgotPasswordCode" component={ForgotPasswordCode} />
-            <Stack.Screen name="ForgotPasswordChangePassword" component={ForgotPasswordChangePassword} />
+            <Stack.Screen
+                name="ForgotPasswordChangePassword"
+                component={ForgotPasswordChangePassword}
+            />
         </Stack.Navigator>
     );
 };

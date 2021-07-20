@@ -6,21 +6,20 @@ const { primary, secondary } = theme.colors;
 
 export const styles = StyleSheet.create({
     status_bar: {
-        backgroundColor: primary
+        backgroundColor: primary,
     },
     header_container: {
         backgroundColor: primary,
         borderBottomWidth: 0,
         height: 90,
         paddingHorizontal: 14,
-        zIndex: 1
+        zIndex: 1,
     },
     header_title: {
         color: secondary,
-        fontSize: 24,
-        fontFamily: main
+        fontFamily: main,
     },
     header_icon: {
         color: secondary,
-    }
+    },
 });

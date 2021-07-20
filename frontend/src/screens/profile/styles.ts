@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     avatar_container: {
-        elevation: 5
+        elevation: 5,
     },
     user_information_container: {
         color: secondary,
@@ -27,12 +27,12 @@ export const styles = StyleSheet.create({
     profile_user_title: {
         color: secondary,
         fontSize: 27,
-        fontFamily: bold
+        fontFamily: bold,
     },
     profile_user_description: {
         color: secondary,
         fontSize: 18,
-        fontFamily: main
+        fontFamily: main,
     },
     version_label: {
         color: secondary,
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
     logout_label: {
         fontSize: 20,
         textAlign: 'center',
-        fontFamily: main
+        fontFamily: main,
     },
     logout_button: {
         borderRadius: 100,
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         width: 200,
         borderRadius: 100,
-        elevation: 8
+        elevation: 8,
     },
     logout_button_icon: {
         color: primary,
@@ -64,13 +64,13 @@ export const styles = StyleSheet.create({
     modal_title: {
         color: primary,
         fontSize: 30,
-        fontFamily: main
+        fontFamily: main,
     },
     modal_label: {
         color: primary,
         marginVertical: 20,
         fontSize: 17,
-        fontFamily: main
+        fontFamily: main,
     },
     modal_logout_button: {
         borderRadius: 100,
@@ -80,11 +80,11 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         width: '46%',
         borderRadius: 100,
-        elevation: 10
+        elevation: 10,
     },
     divider: {
         alignSelf: 'center',
         marginVertical: 5,
         width: 40,
-    }
+    },
 });

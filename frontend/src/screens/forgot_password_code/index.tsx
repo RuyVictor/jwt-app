@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { styles, CELL_SIZE, CELL_BORDER_RADIUS } from "./styles";
+import { styles, CELL_SIZE, CELL_BORDER_RADIUS } from './styles';
 import { View, TouchableOpacity, Animated } from 'react-native';
 import { Text, Divider } from 'react-native-elements';
 import MainHeader from '../../components/main_header';
@@ -14,50 +14,49 @@ import {
     Cursor,
     useBlurOnFulfill,
     useClearByFocusCell,
-    RenderCellOptions
+    RenderCellOptions,
 } from 'react-native-confirmation-code-field';
 
 // Contexts
 import AuthContext from '../../contexts/AuthContext';
 
 interface IRouteParams {
-  email: string
+    email: string;
 }
 
-export default function ForgotPasswordCode({route, navigation}) {
-
+export default function ForgotPasswordCode({ route, navigation }) {
     const { email } = route.params as IRouteParams;
 
     const { forgotPassword, forgotPasswordVerify } = React.useContext(AuthContext);
 
     // WARNINGS
     const [authError, setAuthError] = React.useState('');
-    
+
     const handleVerifyCode = async () => {
         setAuthError('');
-        const { status, message } = await forgotPasswordVerify(email, codeValue)
+        const { status, message } = await forgotPasswordVerify(email, codeValue);
         if (status === 201) {
-            navigation.navigate('ForgotPasswordChangePassword', {email, code: codeValue})
-        } else if (status === 406 && message === "Code is not equal!") {
+            navigation.navigate('ForgotPasswordChangePassword', { email, code: codeValue });
+        } else if (status === 406 && message === 'Code is not equal!') {
             setAuthError('O código não confere!');
-            setCodeValue('')
-        } else if (status === 406 && message === "Token expired!") {
+            setCodeValue('');
+        } else if (status === 406 && message === 'Token expired!') {
             setAuthError('Este código não existe ou já foi expirado!');
-            setCodeValue('')
+            setCodeValue('');
         } else if (status === 503) {
             setAuthError('Não foi possível se conectar ao servidor!');
-            setCodeValue('')
+            setCodeValue('');
         } else if (status === 500) {
             setAuthError('Ocorreu um erro interno!');
-            setCodeValue('')
+            setCodeValue('');
         }
     };
 
     const handleSendCodeAgain = async () => {
         setAuthError('');
-        const status = await forgotPassword(email)
+        const status = await forgotPassword(email);
         if (status === 201) {
-            Toast.show({ text1: 'O código foi enviado ao seu email!', type: 'success' })
+            Toast.show({ text1: 'O código foi enviado ao seu email!', type: 'success' });
         } else if (status === 404) {
             setAuthError('Usuário não encontrado!');
         } else if (status === 503) {
@@ -74,15 +73,15 @@ export default function ForgotPasswordCode({route, navigation}) {
     useEffect(() => {
         async function handleAutomaticSubmit() {
             if (codeValue.length === CELL_COUNT) {
-                handleVerifyCode()
+                handleVerifyCode();
             }
         }
-        handleAutomaticSubmit()
-    }, [codeValue])
+        handleAutomaticSubmit();
+    }, [codeValue]);
 
     const animationsColor = [...new Array(CELL_COUNT)].map(() => new Animated.Value(0));
     const animationsScale = [...new Array(CELL_COUNT)].map(() => new Animated.Value(1));
-    const animateCell = ({symbol, index, isFocused}: RenderCellOptions) => {
+    const animateCell = ({ symbol, index, isFocused }: RenderCellOptions) => {
         const hasValue = Boolean(symbol);
         Animated.parallel([
             Animated.timing(animationsColor[index], {
@@ -98,47 +97,48 @@ export default function ForgotPasswordCode({route, navigation}) {
         ]).start();
     };
 
-    const ref = useBlurOnFulfill({value: codeValue, cellCount: CELL_COUNT});
+    const ref = useBlurOnFulfill({ value: codeValue, cellCount: CELL_COUNT });
     const [props, getCellOnLayoutHandler] = useClearByFocusCell({
         value: codeValue,
         setValue: setCodeValue,
     });
 
-    const renderCell = ({index, symbol, isFocused}: RenderCellOptions) => {
+    const renderCell = ({ index, symbol, isFocused }: RenderCellOptions) => {
         const hasValue = Boolean(symbol);
         const animatedCellStyle = {
             backgroundColor: hasValue
-            ? animationsScale[index].interpolate({
-                inputRange: [0, 1],
-                outputRange: [secondary, secondary],
-                })
-            : animationsColor[index].interpolate({
-                inputRange: [0, 1],
-                outputRange: [primary, secondary],
-                }),
+                ? animationsScale[index].interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [secondary, secondary],
+                  })
+                : animationsColor[index].interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [primary, secondary],
+                  }),
             borderRadius: animationsScale[index].interpolate({
-            inputRange: [0, 1],
-            outputRange: [CELL_SIZE, CELL_BORDER_RADIUS],
+                inputRange: [0, 1],
+                outputRange: [CELL_SIZE, CELL_BORDER_RADIUS],
             }),
             transform: [
-            {
-                scale: animationsScale[index].interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.6, 1],
-                }),
-            },
+                {
+                    scale: animationsScale[index].interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0.6, 1],
+                    }),
+                },
             ],
         };
 
         setTimeout(() => {
-            animateCell({symbol, index, isFocused});
+            animateCell({ symbol, index, isFocused });
         }, 0);
-      
+
         return (
             <Animated.Text
                 key={index}
                 style={[styles.cell, animatedCellStyle]}
-                onLayout={getCellOnLayoutHandler(index)}>
+                onLayout={getCellOnLayoutHandler(index)}
+            >
                 {symbol || (isFocused ? <Cursor /> : null)}
             </Animated.Text>
         );
@@ -146,14 +146,16 @@ export default function ForgotPasswordCode({route, navigation}) {
 
     return (
         <View style={styles.container}>
-
             <MainHeader
-                iconLeft={{type: 'ionicon', name: 'arrow-back', onPress: () => navigation.goBack()}}
+                iconLeft={{
+                    type: 'ionicon',
+                    name: 'arrow-back',
+                    onPress: () => navigation.goBack(),
+                }}
                 headerTitle="Recuperar senha"
             />
 
             <View style={styles.recover_container}>
-
                 <CodeField
                     ref={ref}
                     {...props}
@@ -166,27 +168,15 @@ export default function ForgotPasswordCode({route, navigation}) {
                     renderCell={renderCell}
                 />
 
-                {authError !== "" && <RequestWarning warning={authError}/>}
+                {authError !== '' && <RequestWarning warning={authError} />}
 
-                <Divider
-                    style={styles.divider}
-                    inset={true} insetType="middle"
-                    width={1}
-                />
+                <Divider style={styles.divider} inset={true} insetType="middle" width={1} />
 
                 <TouchableOpacity onPress={handleSendCodeAgain}>
-                    <View style={{marginTop: 10, alignItems: 'center'}}>
-                        <Text
-                        style={styles.link}
-                        >
-                            O código não chegou no seu email?
-                        </Text>
+                    <View style={{ marginTop: 10, alignItems: 'center' }}>
+                        <Text style={styles.link}>O código não chegou no seu email?</Text>
 
-                        <Text
-                        style={styles.link_bold}
-                        >
-                            Clique aqui para reenviar
-                        </Text>
+                        <Text style={styles.link_bold}>Clique aqui para reenviar</Text>
                     </View>
                 </TouchableOpacity>
             </View>

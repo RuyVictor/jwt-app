@@ -1,11 +1,11 @@
-import React from "react";
-import api from "./api";
+import React from 'react';
+import api from './api';
 import * as SecureStore from 'expo-secure-store';
 
 interface IUserRequest {
     user?: IUser;
     token?: string;
-};
+}
 
 interface IUser {
     id: string;
@@ -17,7 +17,6 @@ interface IUser {
 }
 
 const AuthProvider = () => {
-
     const [currentUserData, setCurrentUserData] = React.useState<IUserRequest>({});
 
     async function saveUserData(data: IUserRequest) {
@@ -35,13 +34,15 @@ const AuthProvider = () => {
                 try {
                     response = await api.post<IUserRequest>('/auth/signin', {
                         email,
-                        password
+                        password,
                     });
-    
+
                     if (response.status === 201) {
                         saveUserData(response.data); // Salva o usuário no secure storage
-                        setCurrentUserData(response.data)
-                        api.defaults.headers.common["Authorization"] = "Bearer ".concat(response.data.token!);
+                        setCurrentUserData(response.data);
+                        api.defaults.headers.common['Authorization'] = 'Bearer '.concat(
+                            response.data.token!,
+                        );
                     }
                 } catch (e) {
                     console.log(e);
@@ -52,7 +53,7 @@ const AuthProvider = () => {
                     }
                 }
             },
-    
+
             signUp: async (data: IUser): Promise<number | undefined> => {
                 let response;
                 try {
@@ -61,7 +62,7 @@ const AuthProvider = () => {
                         email: data.email,
                         password: data.password,
                     });
-    
+
                     if (response.status === 201) {
                         return response.status;
                     }
@@ -74,24 +75,24 @@ const AuthProvider = () => {
                     }
                 }
             },
-    
+
             signOut: async () => {
-                await SecureStore.deleteItemAsync('user_data')
-                setCurrentUserData({})
+                await SecureStore.deleteItemAsync('user_data');
+                setCurrentUserData({});
             },
 
             reloadUserData: async (): Promise<number | undefined> => {
                 let response;
                 try {
                     response = await api.get<IUser>(`/users/findOne/${currentUserData.user?.id}`);
-    
+
                     if (response.status === 200) {
                         const updatedUser = {
                             user: { ...currentUserData.user, ...response.data },
-                            token: currentUserData.token
-                        }
+                            token: currentUserData.token,
+                        };
                         saveUserData(updatedUser); // Salva o usuário no secure storage
-                        setCurrentUserData(updatedUser)
+                        setCurrentUserData(updatedUser);
                     }
                 } catch (e) {
                     console.log(e);
@@ -111,14 +112,14 @@ const AuthProvider = () => {
                         email: data.email,
                         password: data.password,
                     });
-    
+
                     if (response.status === 200) {
                         return response.status;
                     }
                 } catch (e) {
                     console.log(e);
                     if (e.response) {
-                        console.log(e.response.data)
+                        console.log(e.response.data);
                         return e.response.status;
                     } else {
                         return 503;
@@ -126,51 +127,51 @@ const AuthProvider = () => {
                 }
             },
 
-            validateToken: async (): Promise<{isLoading: boolean} | undefined> => {
+            validateToken: async (): Promise<{ isLoading: boolean } | undefined> => {
                 let response;
 
                 try {
-
-                    let userData: IUserRequest = JSON.parse(
-                        await SecureStore.getItemAsync("user_data") as string
+                    const userData: IUserRequest = JSON.parse(
+                        (await SecureStore.getItemAsync('user_data')) as string,
                     );
 
                     if (!userData) {
-                        return { isLoading: false }
+                        return { isLoading: false };
                     }
 
-                    api.defaults.headers.common["Authorization"] = "Bearer ".concat(userData.token!);
+                    api.defaults.headers.common['Authorization'] = 'Bearer '.concat(
+                        userData.token!,
+                    );
 
                     response = await api.get('/auth/validate');
 
                     if (response.status === 200) {
-                        setCurrentUserData(userData) // Salva apenas as informações do usuário.
-                        return { isLoading: false }
+                        setCurrentUserData(userData); // Salva apenas as informações do usuário.
+                        return { isLoading: false };
                     }
-
                 } catch (e) {
                     //Se o token for inválido
-                    console.log(e)
+                    console.log(e);
                     if (e.response) {
                         if (e.response.status === 401) {
                             await SecureStore.deleteItemAsync('user_data');
-                            return { isLoading: false }
+                            return { isLoading: false };
                         }
                     } else {
-                        return { isLoading: false } //Caso não for possível a conexão com o servidor.
+                        return { isLoading: false }; //Caso não for possível a conexão com o servidor.
                         //Retornará a página de login
                     }
                 }
             },
-    
+
             confirmEmail: async (email: string, code: string) => {
                 let response;
                 try {
                     response = await api.post('/mail/confirm-email', {
                         email,
-                        code
+                        code,
                     });
-    
+
                     if (response.status === 201) {
                         return response.status;
                     }
@@ -183,14 +184,14 @@ const AuthProvider = () => {
                     }
                 }
             },
-    
+
             forgotPasswordNotification: async (email: string) => {
                 let response;
                 try {
                     response = await api.post('/mail/forgot-password-notification', {
-                        email
+                        email,
                     });
-    
+
                     if (response.status === 201) {
                         return response.status;
                     }
@@ -203,16 +204,16 @@ const AuthProvider = () => {
                     }
                 }
             },
-    
+
             forgotPasswordVerify: async (email: string, code: string, password?: string) => {
                 let response;
                 try {
                     response = await api.post('/mail/forgot-password-verify', {
                         email,
                         code,
-                        password
+                        password,
                     });
-    
+
                     if (response.status === 201) {
                         return { status: response.status };
                     }
@@ -225,11 +226,35 @@ const AuthProvider = () => {
                     }
                 }
             },
-    
-            getUserData: currentUserData
-    
+
+            changePassword: async (password: string, newPassword: string) => {
+                let response;
+                try {
+                    response = await api.patch(
+                        `/users/change-password/${currentUserData.user?.id}`,
+                        {
+                            password,
+                            newPassword,
+                        },
+                    );
+
+                    if (response.status === 200) {
+                        return { status: response.status };
+                    }
+                } catch (e) {
+                    if (e.response) {
+                        console.log(e.response.data);
+                        return { status: e.response.status, message: e.response.data.message };
+                    } else {
+                        return { status: 503 };
+                    }
+                }
+            },
+
+            getUserData: currentUserData,
         }),
-    [currentUserData]);
+        [currentUserData],
+    );
 };
 
 export default AuthProvider;
