@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/user.entity';
-import { AuthToken } from '../users/auth-token.entity';
+import { RevokedToken } from '../users/revoked-token.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 
@@ -10,8 +10,16 @@ import { LoginUserDto } from './dto/login-user.dto';
 
 import { UnauthorizedException } from '../errors/unauthorized.exception';
 
-type IPayload = {
-  [key in "id" | "email" | "user_name"]: string;
+interface JwtPayload {
+  id: string,
+  email: string,
+  user_name: string,
+  exp: string,
+  iat: string
+}
+
+type DecodedPayload = {
+  [key in "id" | "email" | "user_name" | "exp" | "iat"]: string;
 };
 
 @Injectable()
@@ -19,8 +27,8 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    @InjectRepository(AuthToken)
-    private authTokenRepository: Repository<AuthToken>,
+    @InjectRepository(RevokedToken)
+    private revokedTokenRepository: Repository<RevokedToken>,
     private jwtService: JwtService,
   ) {}
 
@@ -28,8 +36,6 @@ export class AuthService {
     const foundUser = await this.usersRepository
       .createQueryBuilder('user')
       .where('user.email = :email', { email: user.email })
-      .leftJoinAndSelect('user.user_actions', 'user_actions')
-      .leftJoinAndSelect('user_actions.auth_token', 'auth_token')
       .addSelect('user.password')
       .getOne();
 
@@ -54,12 +60,7 @@ export class AuthService {
 
     const generatedToken = this.jwtService.sign(payload);
 
-    await this.authTokenRepository.update(foundUser.user_actions.auth_token.id, {
-      token: generatedToken
-    });
-
     delete foundUser.password;
-    delete foundUser.user_actions;
 
     return {
       user: foundUser,
@@ -67,9 +68,19 @@ export class AuthService {
     };
   }
 
+  async logout(token: string): Promise<{message: string}> {
+    const [, formattedToken] = token.split(' ')
+    await this.revokedTokenRepository.save({token: formattedToken});
+    return { message: "Logout succefully." }
+  }
+
   async refreshToken(token: string) {
     const [, formattedToken] = token.split(' ')
-    const decodedToken = this.jwtService.decode(formattedToken) as IPayload;
+    const decodedToken = this.jwtService.decode(formattedToken) as DecodedPayload;
+    
+    if (!decodedToken) {
+      throw new UnauthorizedException('Invalid token.');
+    }
 
     const foundUser = await this.usersRepository.findOne(decodedToken['id'], {relations: ['user_actions']})
 
@@ -77,11 +88,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token.');
     }
 
-    const tokenFromDatabase = foundUser.user_actions.auth_token.token;
-
-    if (formattedToken !== tokenFromDatabase) {
-      throw new UnauthorizedException('Token has been expired or invalid.');
-    }
+    await this.revokedTokenRepository.save({token: formattedToken}); //delete current token
     
     const payload = {
       id: foundUser.id,
@@ -89,12 +96,22 @@ export class AuthService {
       user_name: foundUser.user_name,
     };
 
-    const generatedToken = this.jwtService.sign(payload);
-
-    await this.authTokenRepository.update(foundUser.user_actions.auth_token.id, {
-      token: generatedToken
-    });
+    const generatedToken = this.jwtService.sign(payload); // generate new token
 
     return { newToken: generatedToken };
+  }
+
+  async validateToken(token: string, payload: JwtPayload): Promise<boolean> {
+    const [, formattedToken] = token.split(' ')
+    //compare with deleted tokens
+    const foundRevokedToken = await this.revokedTokenRepository.findOne(
+      {where: {token: formattedToken}
+    });
+
+    if (foundRevokedToken) {
+      return false;
+    }
+
+    return true;
   }
 }

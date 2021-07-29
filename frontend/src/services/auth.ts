@@ -231,7 +231,7 @@ const AuthProvider = () => {
                 let response;
                 try {
                     response = await api.patch(
-                        `/users/change-password/${currentUserData.user?.id}`,
+                        `/users/update/${currentUserData.user?.id}`,
                         {
                             password,
                             newPassword,

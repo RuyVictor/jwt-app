@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  BeforeUpdate,
   OneToOne,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
@@ -45,6 +46,7 @@ export class User {
   user_actions: UserActions;
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 8);
   }

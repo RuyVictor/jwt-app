@@ -4,14 +4,12 @@ import { Repository, UpdateResult } from 'typeorm';
 import { User } from './user.entity';
 import { UserActions } from '../users/user-actions.entity';
 import { ValidationToken } from './validation-token.entity';
-import { AuthToken } from '../users/auth-token.entity';
 import * as bcrypt from 'bcryptjs';
 
 import { MailService } from 'src/mail/mail.service';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ChangeUserPasswordDto } from './dto/change-user-password';
 
 import { ConflictException } from '../errors/conflict.exception';
 import { NotFoundException } from 'src/errors/not-found.exception';
@@ -26,8 +24,6 @@ export class UsersService {
     private userActionsRepository: Repository<UserActions>,
     @InjectRepository(ValidationToken)
     private validationTokenRepository: Repository<ValidationToken>,
-    @InjectRepository(AuthToken)
-    private authTokenRepository: Repository<AuthToken>,
     private readonly mailService: MailService,
   ) {}
 
@@ -61,10 +57,7 @@ export class UsersService {
     const savedUserActions = await this.userActionsRepository.save(userActions);
 
     const validationToken = this.validationTokenRepository.create({ user_actions: savedUserActions });
-    await this.validationTokenRepository.save(validationToken)
-
-    const authToken = this.authTokenRepository.create({ user_actions: savedUserActions });
-    await this.authTokenRepository.save(authToken)
+    await this.validationTokenRepository.save(validationToken) // create validatedTokens table
 
     await this.mailService.confirmEmailNotification(createUserDto);
   }
@@ -107,7 +100,8 @@ export class UsersService {
         throw new ConflictException('Email address already used.');
       }
 
-      // exiga a senha do usuário !PARA TER A CERTEZA DE QUE ESTE USUÁRIO SEJA REALMENTE O DONO DA CONTA PARA FAZER A ALTERAÇÃO!
+      // exiga a senha do usuário 
+      // PARA TER A CERTEZA DE QUE ESTE USUÁRIO SEJA REALMENTE O DONO DA CONTA PARA FAZER A ALTERAÇÃO!
       const passwordMatched = await bcrypt.compare(
         updateUserDto.password,
         foundUser.password,
@@ -118,36 +112,34 @@ export class UsersService {
       }
 
       return await this.usersRepository.update(id, updateUserDto);
-    } else {
-      return await this.usersRepository.update(id, updateUserDto);
-    }
-  }
-
-  async changePassword(
-    id: string,
-    changeUserPasswordDto: ChangeUserPasswordDto,
-  ) {
-    const foundUser = await this.usersRepository
+    
+    // Caso exiga a troca da senha
+    } else if (updateUserDto.password) {
+      const foundUser = await this.usersRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
       .addSelect('user.password')
       .getOne();
 
-    if (!foundUser) {
-      throw new UnauthorizedException('User not found.');
+      if (!foundUser) {
+        throw new UnauthorizedException('User not found.');
+      }
+
+      const passwordMatched = await bcrypt.compare(
+        updateUserDto.password,
+        foundUser.password,
+      );
+
+      if (!passwordMatched) {
+        throw new UnauthorizedException('Incorrect credentials.');
+      }
+
+      const updateInstance = this.usersRepository.create({password: updateUserDto.newPassword});
+
+      return await this.usersRepository.update(id, updateInstance);
+    } else {
+      // Conteúdos menos sensíveis podem ser alterados facilmente
+      return await this.usersRepository.update(id, updateUserDto);
     }
-
-    const passwordMatched = await bcrypt.compare(
-      changeUserPasswordDto.password,
-      foundUser.password,
-    );
-
-    if (!passwordMatched) {
-      throw new UnauthorizedException('Incorrect credentials.');
-    }
-
-    const newPassword = await bcrypt.hash(changeUserPasswordDto.newPassword, 8);
-
-    return await this.usersRepository.update(id, { password: newPassword });
   }
 }

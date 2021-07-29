@@ -24,15 +24,14 @@ export class AuthController {
     return this.usersService.create(createUserDto);
   }
 
+  @Post('logout')
+  async logout(@Headers('Authorization') token: string) {
+    return this.authService.logout(token);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post('refresh-token')
   async refreshToken(@Headers('Authorization') token: string) {
     return this.authService.refreshToken(token);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('test')
-  test() {
-    return 'valid user';
   }
 }
