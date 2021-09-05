@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 // Contexts
-import AuthContext from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 interface IFormInputs {
     userEmail: string;
@@ -27,7 +27,7 @@ const schema = yup.object().shape({
 });
 
 export default function ForgotPassword({ navigation }) {
-    const { forgotPasswordNotification } = React.useContext(AuthContext);
+    const { forgotPasswordNotification } = useAuth();
 
     const {
         handleSubmit,
@@ -77,7 +77,7 @@ export default function ForgotPassword({ navigation }) {
                         size={14}
                     />
                     <Text style={styles.tips_text}>
-                        Você pode recuperar a sua senha apartir do código que será enviado ao seu
+                        Você pode recuperar a sua senha a partir do código que será enviado ao seu
                         email.
                     </Text>
                 </Card>

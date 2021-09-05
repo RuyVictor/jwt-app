@@ -6,14 +6,11 @@ import { toastConfig } from './src/components/toast_config';
 import Routes from './src/routes';
 import SplashScreen from './src/screens/splash_screen';
 
-// CONTEXT
-import AuthProvider from './src/services/auth';
-import AuthContext from './src/contexts/AuthContext';
+// CONTEXTS
+import { AuthContextProvider } from './src/contexts/AuthContext';
 
 export default function App() {
     const [fontsLoaded, setFontsLoaded] = React.useState(false);
-
-    const authProvider = AuthProvider();
 
     React.useEffect(() => {
         async function loadFonts() {
@@ -32,10 +29,10 @@ export default function App() {
 
     if (fontsLoaded) {
         return (
-            <AuthContext.Provider value={authProvider}>
+            <AuthContextProvider>
                 <Routes />
                 <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} />
-            </AuthContext.Provider>
+            </AuthContextProvider>
         );
     }
     return <SplashScreen />;

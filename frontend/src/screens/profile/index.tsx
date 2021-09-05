@@ -6,10 +6,10 @@ import SecundaryButton from '../../components/secundary_button';
 import MainHeader from '../../components/main_header';
 
 // Contexts
-import AuthContext from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Profile({ navigation }) {
-    const { signOut, getUserData } = React.useContext(AuthContext);
+    const { signOut, getUserData } = useAuth();
 
     const [visible, setVisible] = React.useState(false);
 
@@ -145,6 +145,7 @@ export default function Profile({ navigation }) {
                     isVisible={visible}
                     onBackdropPress={toggleOverlay}
                     overlayStyle={styles.modal_container}
+                    animationType="fade"
                 >
                     <Text style={styles.modal_title}>Sair da conta</Text>
 

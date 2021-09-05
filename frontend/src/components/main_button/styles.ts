@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
         alignSelf: 'center',
         width: '92%',
         borderRadius: 100,
-        elevation: 8,
+        elevation: 2,
     },
     icon: {
         color: primary,

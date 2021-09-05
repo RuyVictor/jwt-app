@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 // Contexts
-import AuthContext from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 interface IRouteParams {
     email: string;
@@ -40,7 +40,7 @@ const schema = yup.object().shape({
 export default function ForgotPasswordChangePassword({ route, navigation }) {
     const { email, code } = route.params as IRouteParams;
 
-    const { forgotPasswordVerify } = React.useContext(AuthContext);
+    const { forgotPasswordVerify } = useAuth();
 
     const {
         handleSubmit,

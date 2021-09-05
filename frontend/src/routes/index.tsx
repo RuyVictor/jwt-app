@@ -6,10 +6,10 @@ import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
 
 // CONTEXT
-import AuthContext from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 
 const Routes: React.FC = () => {
-    const { validateToken, getUserData } = React.useContext(AuthContext);
+    const { validateToken, getUserData } = useAuth();
 
     const [loading, setLoading] = useState(true);
 

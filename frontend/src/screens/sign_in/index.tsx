@@ -14,7 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 // Contexts
-import AuthContext from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 interface IFormInputs {
     userEmail: string;
@@ -30,7 +30,7 @@ const schema = yup.object().shape({
 });
 
 export default function SignIn({ navigation }) {
-    const { signIn } = React.useContext(AuthContext);
+    const { signIn } = useAuth();
 
     const {
         handleSubmit,
@@ -43,7 +43,6 @@ export default function SignIn({ navigation }) {
 
     // WARNINGS
 
-    const input: any = React.createRef();
     const [authError, setAuthError] = React.useState('');
 
     // ACTIONS

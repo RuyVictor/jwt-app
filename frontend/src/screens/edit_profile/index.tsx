@@ -17,7 +17,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 // Contexts
-import AuthContext from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 interface IFormInputs {
     userName: string;
@@ -31,7 +31,7 @@ const schema = yup.object().shape({
 });
 
 export default function EditProfile({ navigation }) {
-    const { updateUser, getUserData, reloadUserData } = React.useContext(AuthContext);
+    const { updateUser, getUserData, reloadUserData } = useAuth();
 
     const {
         handleSubmit,

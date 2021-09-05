@@ -12,24 +12,22 @@ import ForgotPasswordChangePassword from '../screens/forgot_password_change_pass
 
 const Stack = createStackNavigator();
 
-const AuthRoutes: React.FC = () => {
-    return (
-        <Stack.Navigator
-            screenOptions={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid,
-            }}
-        >
-            <Stack.Screen name="SignIn" component={SignIn} />
-            <Stack.Screen name="SignUp" component={SignUp} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-            <Stack.Screen name="ForgotPasswordCode" component={ForgotPasswordCode} />
-            <Stack.Screen
-                name="ForgotPasswordChangePassword"
-                component={ForgotPasswordChangePassword}
-            />
-        </Stack.Navigator>
-    );
-};
+const AuthRoutes: React.FC = () => (
+    <Stack.Navigator
+        screenOptions={{
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid,
+        }}
+    >
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen name="ForgotPasswordCode" component={ForgotPasswordCode} />
+        <Stack.Screen
+            name="ForgotPasswordChangePassword"
+            component={ForgotPasswordChangePassword}
+        />
+    </Stack.Navigator>
+)
 
 export default AuthRoutes;

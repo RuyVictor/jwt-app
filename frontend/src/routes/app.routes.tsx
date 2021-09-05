@@ -12,21 +12,20 @@ import ChangePassword from '../screens/change_password';
 
 const Stack = createStackNavigator();
 
-const AppRoutes: React.FC = () => {
-    return (
-        <Stack.Navigator
-            screenOptions={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid,
-            }}
-        >
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="Profile" component={Profile} />
-            <Stack.Screen name="EditProfile" component={EditProfile} />
-            <Stack.Screen name="EditContactInformation" component={EditContactInformation} />
-            <Stack.Screen name="ChangePassword" component={ChangePassword} />
-        </Stack.Navigator>
-    );
-};
+const AppRoutes: React.FC = () => (
+
+    <Stack.Navigator
+        screenOptions={{
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid,
+        }}
+    >
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="EditContactInformation" component={EditContactInformation} />
+        <Stack.Screen name="ChangePassword" component={ChangePassword} />
+    </Stack.Navigator>
+)
 
 export default AppRoutes;

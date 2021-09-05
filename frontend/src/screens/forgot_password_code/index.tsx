@@ -18,7 +18,7 @@ import {
 } from 'react-native-confirmation-code-field';
 
 // Contexts
-import AuthContext from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 interface IRouteParams {
     email: string;
@@ -27,7 +27,7 @@ interface IRouteParams {
 export default function ForgotPasswordCode({ route, navigation }) {
     const { email } = route.params as IRouteParams;
 
-    const { forgotPassword, forgotPasswordVerify } = React.useContext(AuthContext);
+    const { forgotPassword, forgotPasswordVerify } = useAuth();
 
     // WARNINGS
     const [authError, setAuthError] = React.useState('');

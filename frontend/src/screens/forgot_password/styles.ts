@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         width: 280,
         justifyContent: 'center',
+        alignItems: 'center',
     },
     horizontal_container: {
         flexDirection: 'row',
@@ -21,13 +22,13 @@ export const styles = StyleSheet.create({
     },
     tips_card: {
         borderRadius: 4,
-        margin: 10,
     },
     tips_text: {
         marginLeft: 15,
         fontSize: 17,
         fontFamily: main,
         color: secondary,
+        flexShrink: 1
     },
     warning_icon: {
         color: warningColor,

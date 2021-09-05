@@ -4,10 +4,10 @@ import { View, BackHandler } from 'react-native';
 import { Icon, Button, Text, Input, Divider } from 'react-native-elements';
 import MainHeader from '../../components/main_header';
 
-import AuthContext from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Home({ navigation }) {
-    const { getUserData } = React.useContext(AuthContext);
+    const { getUserData } = useAuth();
 
     function handlePreventBack() {
         navigation.navigate('Home');
